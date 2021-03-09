@@ -1,5 +1,6 @@
 import numpy as np 
 from random import sample
+#references https://stackoverflow.com/questions/45471152/how-to-create-a-sudoku-puzzle-in-python
 base = 3
 
 side = base * base
