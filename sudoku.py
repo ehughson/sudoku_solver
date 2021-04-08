@@ -3,7 +3,7 @@ import sys
 
 characters = 'ABCDEFGHI'
 numbers = '123456789'
-
+#reference: https://github.com/speix/sudoku-solver
 
 class Sudoku:
 
