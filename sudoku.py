@@ -1,52 +1,150 @@
-import numpy as np 
-from random import sample
-#references https://stackoverflow.com/questions/45471152/how-to-create-a-sudoku-puzzle-in-python
-base = 3
+import itertools
+import sys
 
-side = base * base
-
-def pattern(r, c):
-    return (base * (r%base)+r//base+c)%side
-
-def shuffle(s):
-    return sample(s, len(s))
-
-rBase = range(base)
-rows = [g*base + r for g in shuffle(rBase) for r in shuffle(rBase)]
-cols = [g*base +c for g in shuffle(rBase) for c in shuffle(rBase)]
-
-nums = shuffle(range(1, base*base+1))
-
-board = [ [ nums[pattern(r, c )] for c in cols] for r in rows]
-print("############### the following is the solution of the puzzle #################")
-for line in board:
-    print(line)
+characters = 'ABCDEFGHI'
+numbers = '123456789'
 
 
-squares = side*side 
-empties = squares *3//4 
+class Sudoku:
 
-for p in sample(range(squares), empties):
-    board[p//side][p%side] = 0
+    def __init__(self, board):
+        self.variables, self.domains, self.constraints, self.neighbors, self.pruned = list(), dict(), list(), dict(), dict()
+        self.prepare(board)
 
-print("############### the following is the puzzle with values removed #################")
-numSize = len(str(side))
-for line in board:
-    print("["+"  ".join(f"{n or '.':{numSize}}" for n in line)+"]")
+    def prepare(self, board):
 
+        game = list(board)
+        print("here is the game board:", game)
 
-def expandLine(line):
-    return line[0] + line[5:9].join([line[1:5]*(base-1)] *base) + line[9:13]
+        #a = characters
+        #b = numbers
+        self.variables =  [a + b for a in characters for b in numbers]
+        #print(self.variables)
+    
+        #if its 0 then it gets all possible values if its already assigned a number then it gets stuck with that number
+        self.domains = {v: list(range(1, 10)) if game[i] == 0 else [int(game[i])] for i, v in enumerate(self.variables)}
 
-line0  = expandLine("╔═══╤═══╦═══╗")
-line1  = expandLine("║ . │ . ║ . ║")
-line2  = expandLine("╟───┼───╫───╢")
-line3  = expandLine("╠═══╪═══╬═══╣")
-line4  = expandLine("╚═══╧═══╩═══╝")
+        #print(self.domains)
 
-symbol = " 1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-nums   = [ [""]+[symbol[n] for n in row] for row in board ]
-print(line0)
-for r in range(1,side+1):
-    print( "".join(n+s for n,s in zip(nums[r-1],line1.split("."))) )
-    print([line2,line3,line4][(r%side==0)+(r%base==0)])
+        #if assigned a value of 0, then it gets pruned and is given an empty list
+        self.pruned = {v: list() if game[i] == 0 else [int(game[i])] for i, v in enumerate(self.variables)}
+        
+
+        #print(self.pruned)
+
+        self.build_constraints() #builds all possible constraints???
+
+        self.build_neighbors() #get the neighbourhood of each cell
+
+    def build_constraints(self):
+
+        blocks = (
+            [[a + b for a in characters for b in number]for number in numbers] +
+            [[a + b for a in character for b in numbers] for character in characters] +
+            [[a + b for a in character for b in number] for character in ('ABC', 'DEF', 'GHI') for number in ('123', '456', '789')]
+        )
+
+        print(blocks)
+        for block in blocks:
+            combinations = self.permutate(block)
+            for combination in combinations:
+                if [combination[0], combination[1]] not in self.constraints:
+                    self.constraints.append([combination[0], combination[1]])
+        #print(self.constraints)
+
+    def build_neighbors(self):
+
+        for x in self.variables:
+            self.neighbors[x] = list()
+            for c in self.constraints:
+                if x == c[0]:
+                    self.neighbors[x].append(c[1])
+        #print(self.neighbors)
+
+    def solved(self):
+
+        for v in self.variables:
+            if len(self.domains[v]) > 1:
+                return False
+
+        return True
+
+    def complete(self, assignment):
+
+        for x in self.variables:
+            if len(self.domains[x]) > 1 and x not in assignment:
+                return False
+
+        return True
+
+    def consistent(self, assignment, var, value):
+
+        consistent = True
+
+        for key, val in assignment.iteritems():
+            if val == value and key in self.neighbors[var]:
+                consistent = False
+
+        return consistent
+
+    def assign(self, var, value, assignment):
+
+        assignment[var] = value
+
+        self.forward_check(var, value, assignment)
+
+    def unassign(self, var, assignment):
+
+        if var in assignment:
+
+            for (D, v) in self.pruned[var]:
+                self.domains[D].append(v)
+
+            self.pruned[var] = []
+
+            del assignment[var]
+
+    def forward_check(self, var, value, assignment):
+
+        for neighbor in self.neighbors[var]:
+            if neighbor not in assignment:
+                if value in self.domains[neighbor]:
+                    self.domains[neighbor].remove(value)
+                    self.pruned[var].append((neighbor, value))
+
+    @staticmethod
+    def constraint(xi, xj): 
+        print(xi != xj)
+        return xi != xj
+
+    @staticmethod
+    def permutate(iterable):
+        result = list()
+
+        for L in range(0, len(iterable) + 1):
+            if L == 2:
+                for subset in itertools.permutations(iterable, L):
+                    result.append(subset)
+
+        return result
+
+    @staticmethod
+    def conflicts(sudoku, var, val):
+
+        count = 0
+
+        for n in sudoku.neighbors[var]:
+            if len(sudoku.domains[n]) > 1 and val in sudoku.domains[n]:
+                count += 1
+
+        return count
+
+    def out(self, mode):
+
+        if mode == 'console':
+
+            for var in self.variables:
+                sys.stdout.write(str(self.domains[var][0]))
+
+        elif mode == 'file':
+            return
