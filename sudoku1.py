@@ -94,6 +94,19 @@ class SudokuPuzzle:
 
         return True
 
+    def print_sudoku(self):
+        """
+        Prints the sudoku puzzle
+
+        """
+        for row in self.board:
+            print("|",end=" ")
+            for i in range(self.size):
+                print(row[i],"|",end=" ")
+            print("\n")
+
+
+
 
 
 
