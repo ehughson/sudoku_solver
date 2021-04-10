@@ -1,6 +1,4 @@
 from math import sqrt
-
-
 class SudokuPuzzle:
     """
     A class to represent a single sudoku puzzle.
@@ -37,7 +35,9 @@ class SudokuPuzzle:
         self.size = len(board)
         self.symbols = []
         for i in range(self.size):
-            self.symbols.append(str(i))
+            self.symbols.append(str(i+1))
+        self.symbols.sort()
+
 
     def check_validity(self):
         """
@@ -81,20 +81,20 @@ class SudokuPuzzle:
                 break
 
         "checking for duplicates in each subgrid"
-        s = sqrt(self.size)
+        s = int(sqrt(self.size))
         row_start = 0
         for i in range(s):
             col = 0
             for c in range(s):
-                subg = []
+                subgrid = []
                 for j in range(s):
                     r = row_start
                     for k in range(s):
                         row = self.board[r]
-                        subg.append(row[col])
+                        subgrid.append(row[col])
                         r += 1
                     col += 1
-                subg_duplicates = any(subg.count(element) > 1 for element in subg)
+                subg_duplicates = any(subgrid.count(element) > 1 for element in subgrid)
                 if subg_duplicates:
                     break
             row_start += s
@@ -117,7 +117,8 @@ class SudokuPuzzle:
 
         "If any row does not match the list of symbols used in the puzzle, it is not solved"
         for row in self.board:
-            if row.sorted() != self.symbols.sort():
+            row.sort()
+            if row != self.symbols:
                 return False
 
         return True
