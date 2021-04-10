@@ -1,3 +1,6 @@
+from math import sqrt
+
+
 class SudokuPuzzle:
     """
     A class to represent a single sudoku puzzle.
@@ -65,14 +68,38 @@ class SudokuPuzzle:
         "checking for duplicates in each row"
         for row in self.board:
             row_duplicates = any(row.count(element) > 1 for element in row)
-        "checking for duplicates in each column"
-        #To be added -> take 1st/2nd/3rd/ element of each row and put in lists. Do the same operation as above
-        col_duplicates = True
-        "checking for duplicates in each subgrid"
-        #To be added
-        sub_duplicates = True
+            if row_duplicates:
+                break
 
-        if row_duplicates | col_duplicates | sub_duplicates:
+        "checking for duplicates in each column"
+        for i in range(self.size):
+            col = []
+            for row in self.board:
+                col.append(row[i])
+            col_duplicates = any(col.count(element) > 1 for element in col)
+            if col_duplicates:
+                break
+
+        "checking for duplicates in each subgrid"
+        s = sqrt(self.size)
+        row_start = 0
+        for i in range(s):
+            col = 0
+            for c in range(s):
+                subg = []
+                for j in range(s):
+                    r = row_start
+                    for k in range(s):
+                        row = self.board[r]
+                        subg.append(row[col])
+                        r += 1
+                    col += 1
+                subg_duplicates = any(subg.count(element) > 1 for element in subg)
+                if subg_duplicates:
+                    break
+            row_start += s
+
+        if row_duplicates | col_duplicates | subg_duplicates:
             return True
 
         return False
@@ -80,6 +107,7 @@ class SudokuPuzzle:
     def solved(self):
         """
         Checks if the puzzle is solved
+        ***This should be preceded by an invalid state check***
 
         Returns
         -------
@@ -87,9 +115,9 @@ class SudokuPuzzle:
         False: Otherwise
         """
 
-        #If any row does not match the list of symbols used in the puzzle, it is not solved
+        "If any row does not match the list of symbols used in the puzzle, it is not solved"
         for row in self.board:
-            if row != self.symbols:
+            if row.sorted() != self.symbols.sort():
                 return False
 
         return True
@@ -97,12 +125,11 @@ class SudokuPuzzle:
     def print_sudoku(self):
         """
         Prints the sudoku puzzle
-
         """
         for row in self.board:
-            print("|",end=" ")
+            print("|", end=" ")
             for i in range(self.size):
-                print(row[i],"|",end=" ")
+                print(row[i], "|", end=" ")
             print("\n")
 
 
