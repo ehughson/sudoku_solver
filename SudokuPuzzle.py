@@ -115,6 +115,10 @@ class SudokuPuzzle:
         False: Otherwise
         """
 
+        "Not solved if the state is invalid"
+        if self.invalid_state():
+            return False
+
         "If any row does not match the list of symbols used in the puzzle, it is not solved"
         for row in self.board:
             row.sort()
