@@ -107,7 +107,6 @@ class SudokuPuzzle:
     def solved(self):
         """
         Checks if the puzzle is solved
-        ***This should be preceded by an invalid state check***
 
         Returns
         -------
