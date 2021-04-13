@@ -6,7 +6,7 @@ from SudokuPuzzle import SudokuPuzzle
 
 class HillClimbing:
     """
-    A class to represent a Sudoku solver using HillClimbing Algorithm
+    A class to represent a Sudoku solver using HillClimbing Algorithm using Random Restart
     Reference : https://www.cs.rochester.edu/u/brown/242/assts/termprojs/Sudoku09.pdf
 
     Steps implemented
@@ -15,6 +15,11 @@ class HillClimbing:
     defined as swapping any two non fixed values in the same row.  The heuristic can simply be the sum
     of the number of conflicts that appear within each column and each box.  Since each row has exactly
     the numbers one to n^2 there are no conflicts within the rows.
+
+    The general hill climbing algorithm described above is incomplete.  This is because it can
+    get stuck in a local minimum.   One simple way to fix this is to randomly restart the algorithm
+    whenever it goes a while without improving the heuristic value.  This is known as random restart
+    hill climbing.
 
     Attributes
     ----------
@@ -115,19 +120,22 @@ class HillClimbing:
         """finding local maxima using heuristic function"""
         for i in range(self.iterations):
             next_state = self.successor_function(state)
+            # random restart
             if i == self.iterations:
                 return state
+            # no conflicts in column/sub grid -> solved
             if self.heuristic_function(next_state) == 0:
                 return next_state
             else:
+                # improvement in heuristic function
                 if self.heuristic_function(next_state) >= self.heuristic_function(state):
                     return self.climb(state)
 
     def solver(self):
         """solver using HillClimbing"""
         start_time = time()
-        while (not (self.current_state.solved() and not self.current_state.invalid_state())) or \
-                (time() - start_time < self.max_runtime):
+        # continue until solution has been found or until max_runtime has not been reached
+        while (not self.current_state.solved()) or (time() - start_time < self.max_runtime):
             self.current_state = self.climb(self.current_state)
         if self.current_state.solved() and not self.current_state.invalid_state():
             return self.current_state
