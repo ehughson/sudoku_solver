@@ -140,30 +140,22 @@ if __name__ == '__main__':
 
         board = [[ nums[pattern(r, c )] for c in colum] for r in rows1]
         
-        squares = side*side 
-        empties = squares *3//4 
+        #squares = side*side 
+        print(3//4)
+        empties = (side*side) * 3//6
+        #empties = 37
 
-        for p in sample(range(squares), empties):
+        print(empties)
+
+        for p in sample(range(side*side), empties):
                 board[p//side][p%side] = 0
         
         print(board)
-        board = [[0,0,3,0,2,0,6,0,0],[9,0,0,3,0,5,0,0,1],[0,0,1,8,0,6,4,0,0],[0,0,8,1,0,2,9,0,0],[7,0,0,0,0,0,0,0,8],[0,0,6,7,0,8,2,0,0],[0,0,2,6,0,9,5,0,0],[8,0,0,2,0,3,0,0,9],[0,0,5,0,1,0,3,0,0]]
+        #"000260701680070090190004500820100040004602900050003028009300074040050036703018000"
+        #board = [[0,0,0,2,6,0,7,0,1],[6,8,0,0,7,0,0,9,0],[1,9,0,0,0,4,5,0,0],[8,2,0,1,0,0,0,4,0],[0,0,4,6,0,2,9,0,0],[0,5,0,0,0,3,0,2,8],[0,0,9,3,0,0,0,7,4],[0,4,0,0,5,0,0,3,6],[7,0,3,0,1,8,0,0,0]]
 
-
-
-        test_bt = SudokuPuzzle(board)
-        print(test_bt)
-        print("the results of sudokupuzzle:",  test_bt.board)
+        #test_bt = SudokuPuzzle(board)
+        #print("the results of sudokupuzzle:",  test_bt.board)
         sudoku = csp(grid=board)
 
         ac3_results = sudoku.AC3()
-        #print(sudoku.values)
-        #print(sudoku.write(sudoku.values))
-        #print(sudoku.display(sudoku.values))
-        #print(ac3_results)
-        #for grid in board:
-        #        #prev = time.time()
-        #        print(grid)
-        #        sudoku = csp(grid=grid)
-        
-        #print(sudoku.constraints)
