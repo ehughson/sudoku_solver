@@ -5,119 +5,127 @@ from time import time
 from SudokuPuzzle import SudokuPuzzle
 import queue
 
-digits =  cols = "123456789"
-rows = "ABCDEFGHI"
-
-
-#FINDING THE CROSS PRODUCT OF TWO SETS 
-def cross(A, B):
-	return [a + b for a in A for b in B]
-
-squares = cross(rows, cols)
-print(squares)
 
 class csp:
     #INITIALIZING THE CSP
-    def __init__ (self, grid, domain = digits):
-        digits =  cols = "123456789"
-        rows = "ABCDEFGHI"
-
-
+    def __init__ (self,grid = ""):
+        self.digits =  self.cols = "123456789"
+        self.rows = "ABCDEFGHI"
         #FINDING THE CROSS PRODUCT OF TWO SETS 
+
         def cross(A, B):
             return [a + b for a in A for b in B]
 
-        self.squares = cross(rows, cols)
-        #print(squares)
-        #print(self.variables)
+        self.squares = cross(self.rows, self.cols)
+        #print(self.squares)
         self.domain = self.getDict(grid)
         self.values = self.getDict(grid)		
-        #print(self.values)
+        #print("here are the domains: ", len(self.domain))
+        #print("here are the values:", len(self.values))
 
-        self.unitlist = ([cross(rows, c) for c in cols] +
-            [cross(r, cols) for r in rows] +
-            [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')])
-
+        print("here are the cols:", self.cols)
+        self.unitlist = ([cross(self.rows, c) for c in self.cols] + [cross(r, self.cols) for r in self.rows] + [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')])
         
         #print(self.unitlist)
-        #print(self.squares)
         self.units = dict((s, [u for u in self.unitlist if s in u]) for s in self.squares)
+        
         self.peers = dict((s, set(sum(self.units[s],[]))-set([s])) for s in self.squares)
-        self.constraints = {(variable, peer) for variable in self.squares for peer in self.peers[variable]}
+        #print(self.peers)
+        self.constraints = {(variable, peer) for variable in self.squares for peer in self.peers[variable]} #all the arcs A<B = A<B and B<A
+        #print(self.constraints)
+        #print("here are the constraints:", len(self.constraints))
 
-	#GETTING THE STRING AS INPUT AND RETURNING THE CORRESPONDING DICTIONARY
-    def getDict(self, grid):
+    def getDict(self, grid =""):
         i = 0
         j = 0
         values = dict()
-        #print(self.squares)
-
+        
+        print(grid)
         for cell in self.squares:
             #print(grid)
             if j < 9:
                 if grid[j][i]!=0:
-                    #print("the grid is:", grid[j][i])
-                    #print("what is j?",j)
-                    values[cell] = grid[j][i]
+                    values[cell] = str(grid[j][i])
                 else:
-                    values[cell] = digits
+                    values[cell] = self.digits
                 i = i +1
                 if i == 9:
                     i = 0
                     j = j + 1 
-        #print(values)
+        print(values)
         return values
 
     def AC3(self):
         q = queue.Queue()
-
-        for arc in self.constraints:
+        
+        for arc in self.constraints: #add all the arcs to a queue
             q.put(arc)
 
+        #print("what is the queue size?", q.qsize())
         #print(self.values)
         i = 0
         while not q.empty():
-            (Xi, Xj) = q.get()
-            print(Xi)
-            print(Xj)
-
+            (x, y) = q.get() #get the first arc (x,y) off the queue
+            #values = set(self.values[x])
             i = i + 1 
-
-            if self.Revise(Xi, Xj):
-                if len(self.values[Xi]) == 0:
+            if self.Revise(x, y):
+                #print(self.values[x])
+                if len(self.values[x]) == 0:
+                    #print(self.values[x])
                     return False
 
-                for Xk in (self.peers[Xi] - set(Xj)):
-                    q.put((Xk, Xi))
+                for k in (self.peers[x] - set(y)): #remove values from x domain for which there is no possible corresponding y domain
+                    q.put((k, x)) #if the x domain has changed add all arcs of the form (k, x) to the queue
 
+                    #print("what is the queue size?", q.qsize())
+        
+        print(i)
+        self.display(self.values)
         return True 
 
 
-
+    
     #WORKING OF THE REVISE ALGORITHM
     def Revise(self, Xi, Xj):
-        #print(Xi)
         revised = False
-        #print(self.values[Xi])
-        values = set(str(self.values[Xi]))
-        print(values)
-
+        values = set(self.values[Xi])
         for x in values:
             if not self.isconsistent(x, Xi, Xj):
                 self.values[Xi] = self.values[Xi].replace(x, '')
                 revised = True 
 
         return revised 
+    
 
     def isconsistent(self, x, Xi, Xj):
-        print("what is the value?", self.values[Xj])
-        #print(list(self.values[Xj]))
-        yvalues = set(str(self.values[Xj]))
-        for y in yvalues:
+        for y in self.values[Xj]:
             if Xj in self.peers[Xi] and y!=x:
                 return True
 
         return False
+
+    def display(self, values):
+        for r in self.rows:
+            if r in 'DG':
+                print ("------------------------------------------------------------------------------")
+            for c in self.cols:
+                if c in '47':
+                    print (' | ', values[r+c], ' ',end=' ')
+                else:
+                    print (values[r+c], ' ',end=' ')
+            print (end='\n')
+    
+    def isComplete(self, csp):
+        for variable in squares:
+            if len(csp.values[variable])>1:
+                return False
+        return True
+
+    def write(self, values):
+        output = ""
+        for variable in self.squares:
+            output = output + str(values[variable])
+        return output
 
 
 if __name__ == '__main__':
@@ -132,12 +140,12 @@ if __name__ == '__main__':
                 return sample(s, len(s))
 
         rBase = range(base)
-        rows = [g*base + r for g in shuffle(rBase) for r in shuffle(rBase)]
-        cols = [g*base +c for g in shuffle(rBase) for c in shuffle(rBase)]
+        rows1 = [g*base + r for g in shuffle(rBase) for r in shuffle(rBase)]
+        colum = [g*base +c for g in shuffle(rBase) for c in shuffle(rBase)]
 
         nums = shuffle(range(1, base*base+1))
 
-        board = [[ nums[pattern(r, c )] for c in cols] for r in rows]
+        board = [[ nums[pattern(r, c )] for c in colum] for r in rows1]
         
         squares = side*side 
         empties = squares *3//4 
@@ -146,11 +154,20 @@ if __name__ == '__main__':
                 board[p//side][p%side] = 0
         
         print(board)
+        board = [[0,0,3,0,2,0,6,0,0],[9,0,0,3,0,5,0,0,1],[0,0,1,8,0,6,4,0,0],[0,0,8,1,0,2,9,0,0],[7,0,0,0,0,0,0,0,8],[0,0,6,7,0,8,2,0,0],[0,0,2,6,0,9,5,0,0],[8,0,0,2,0,3,0,0,9],[0,0,5,0,1,0,3,0,0]]
 
-        sudoku = csp(board)
+
+
+        test_bt = SudokuPuzzle(board)
+        print(test_bt)
+        print("the results of sudokupuzzle:",  test_bt.board)
+        sudoku = csp(grid=board)
 
         ac3_results = sudoku.AC3()
-        print(ac3_results)
+        #print(sudoku.values)
+        #print(sudoku.write(sudoku.values))
+        #print(sudoku.display(sudoku.values))
+        #print(ac3_results)
         #for grid in board:
         #        #prev = time.time()
         #        print(grid)
