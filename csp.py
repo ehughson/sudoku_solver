@@ -64,38 +64,31 @@ class csp:
         #print("what is the queue size?", q.qsize())
         #print(self.values)
         i = 0
+        print("entering queue")
         while not q.empty():
             (x, y) = q.get() #get the first arc (x,y) off the queue
             #values = set(self.values[x])
             i = i + 1 
-            if self.Revise(x, y):
-                #print(self.values[x])
-                if len(self.values[x]) == 0:
+            #if self.Revise(x, y):
+            values = set(self.values[x])
+            for p in values:
+                if not self.isconsistent(p, x, y):
+                    self.values[x] = self.values[x].replace(p, '')
                     #print(self.values[x])
-                    return False
+                    if len(self.values[x]) == 0:
+                        #print(self.values[x])
+                        return False
 
-                for k in (self.peers[x] - set(y)): #remove values from x domain for which there is no possible corresponding y domain
-                    q.put((k, x)) #if the x domain has changed add all arcs of the form (k, x) to the queue
+                    for k in (self.peers[x] - set(y)): #remove values from x domain for which there is no possible corresponding y domain
+                        q.put((k, x)) #if the x domain has changed add all arcs of the form (k, x) to the queue
 
-                    #print("what is the queue size?", q.qsize())
+                        #print("what is the queue size?", q.qsize())
         
         print(i)
         self.display(self.values)
         return True 
 
 
-    
-    #WORKING OF THE REVISE ALGORITHM
-    def Revise(self, Xi, Xj):
-        revised = False
-        values = set(self.values[Xi])
-        for x in values:
-            if not self.isconsistent(x, Xi, Xj):
-                self.values[Xi] = self.values[Xi].replace(x, '')
-                revised = True 
-
-        return revised 
-    
 
     def isconsistent(self, x, Xi, Xj):
         for y in self.values[Xj]:
