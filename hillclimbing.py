@@ -1,6 +1,6 @@
 import random
 from math import sqrt
-from time import time
+import sys
 from SudokuPuzzle import SudokuPuzzle
 
 
@@ -42,6 +42,7 @@ class HillClimbing:
     """
 
     def __init__(self, puzzle, iterations):
+        sys.setrecursionlimit(3000)
         self.start_state = puzzle
         self.non_fixed_values = list()
         emp_list = []
@@ -83,8 +84,9 @@ class HillClimbing:
         if state.size == 1:
            sel_row = 0
         else:
-           print("choice list ",self.choices)
-           sel_row = random.choice(self.choices)
+           rand_num = random.randint(0, len(self.choices)-1)
+           sel_row = self.choices[rand_num]
+
         row = self.non_fixed_values[sel_row]
         len_fixed = len(row)
         if len_fixed > 1:
@@ -92,7 +94,6 @@ class HillClimbing:
            fix2 = random.randint(0, len_fixed-1)
         else:
             fix1 = 0
-            fix2 = 0
             fix2 = 0
         pos1 = row[fix1]
         pos2 = row[fix2]
@@ -137,28 +138,31 @@ class HillClimbing:
 
         return conflicts
 
-    def climb(self, state: SudokuPuzzle):
+    def climb(self, state: SudokuPuzzle,iteration: int):
         """finding local maxima using heuristic function"""
-        for i in range(self.iterations):
-            next_state = self.successor_function(state)
-            # random restart
-            if i == self.iterations:
-                return state
-            # no conflicts in column/sub grid -> solved
-            if self.heuristic_function(next_state) == 0:
-                return next_state
-            else:
-                # improvement in heuristic function
-                if self.heuristic_function(next_state) >= self.heuristic_function(state):
-                    return self.climb(state)
+        next_state = self.successor_function(state)
+        # random restart
+        if iteration == self.iterations:
+            return state
+        # no conflicts in column/sub grid -> solved
+        if self.heuristic_function(next_state) == 0:
+            return next_state
+        else:
+            # improvement in heuristic function
+            if self.heuristic_function(next_state) >= self.heuristic_function(state):
+                iteration+=1
+                return self.climb(state, iteration)
 
     def solver(self):
         """solver using HillClimbing"""
         # continue until solution has been found
+        i = 0
         while True:
+            i+=1
             if self.current_state.solved():
                 return self.current_state
-            self.current_state = self.climb(self.current_state)
+            self.current_state = self.climb(self.current_state, 1)
+        print("total iteratins = ",i)
         return None
 
 #board = [["1",""],["","1"]]
