@@ -98,7 +98,6 @@ class SudokuPuzzle:
                 if subg_duplicates:
                     break
             row_start += s
-
         if row_duplicates | col_duplicates | subg_duplicates:
             return True
 
@@ -120,7 +119,7 @@ class SudokuPuzzle:
 
         "If any row does not match the list of symbols used in the puzzle, it is not solved"
         for row in self.board:
-            row.sort()
+            row = sorted(row)
             if row != self.symbols:
                 return False
 
