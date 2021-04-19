@@ -164,15 +164,25 @@ class SudokuPuzzle:
 
         return True
 
-    def print_sudoku(self):
+    def print_sudoku(self, values = None):
         """
         Prints the sudoku puzzle
         """
-        for row in self.board:
-            print("|", end=" ")
-            for i in range(self.size):
-                print(row[i], "|", end=" ")
-            print("\n")
+        print(values)
+        if values:
+            for row in values:
+                #print(row)
+                print("|", end=" ")
+                for i in row:
+                    print(i, "|", end=" ")
+                print("\n")
+        else:
+            for row in self.board:
+                print("|", end=" ")
+                for i in range(self.size):
+                    print(row[i], "|", end=" ")
+                print("\n")
+
 
 
 

@@ -33,8 +33,25 @@ class AC3():
                         for v in k:
                             if v != x:
                                 q.put((v, x)) #if the x domain has changed add all arcs of the form (k, x) to the queue
-        self.display(self.grid.values)
-        return True 
+        
+        #print(self.grid.values)
+        sudoku_grid = []
+        r = 0
+        for key in self.grid.values:
+            if r == 0:
+                interarray = []
+            r = r +1
+            if len(self.grid.values[key]) > 1:
+                print("WE HAVE AN ERROR -- VALUE CONTAINS MORE THAN ONE VALUE")
+                exit(-1)
+            interarray.append(self.grid.values[key])
+            if r == 9:
+                r = 0
+                sudoku_grid.append(interarray)
+            #print(val)
+        print(sudoku_grid)
+        #self.grid.print_sudoku(self.grid.values)
+        return sudoku_grid
 
 
     def isconsistent(self, x, Xi, Xj):
@@ -95,3 +112,5 @@ if __name__ == '__main__':
         #print("the symbols are:", test_bt.symbols)
         sudoku = AC3(test_bt)
         final_sudoku = sudoku.AC3_solve()
+        print(final_sudoku)
+        test_bt.print_sudoku(final_sudoku)

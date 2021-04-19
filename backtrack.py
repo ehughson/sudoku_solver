@@ -100,7 +100,7 @@ if __name__ == '__main__':
         print(back_track)
         backtrack_output = back_track.solveSudoku()
         print(backtrack_output)
-
+        test_bt.print_sudoku()
 
 
 
