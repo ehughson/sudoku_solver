@@ -39,7 +39,6 @@ class SudokuPuzzle:
         self.symbols.sort()
         self.digits =  self.cols = "123456789"
         self.rows = "ABCDEFGHI"
-        #FINDING THE CROSS PRODUCT OF TWO SETS 
 
         def cross(A, B):
             return [a + b for a in A for b in B]
@@ -50,16 +49,13 @@ class SudokuPuzzle:
         self.values = self.getDict(self.board)		
         #print("here are the domains: ", len(self.domain))
         #print("here are the values:", len(self.values))
-
-        #print("here are the cols:", self.cols)
         self.unitlist = ([cross(self.rows, c) for c in self.cols] + [cross(r, self.cols) for r in self.rows] + [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')])
         
         #print(self.unitlist)
         self.units = dict((s, [u for u in self.unitlist if s in u]) for s in self.squares)
-        
-        self.peers = dict((s, set(sum(self.units[s],[]))-set([s])) for s in self.squares)
-        #print(self.peers)
-        self.constraints = {(variable, peer) for variable in self.squares for peer in self.peers[variable]} #all the arcs A<B = A<B and B<A
+
+        #print(self.units)        
+        self.constraints = {(variable, i) for variable in self.squares for peer in self.units[variable] for i in peer if i != variable}
         #print(self.constraints)
     
     def getDict(self, grid =""):
@@ -70,19 +66,18 @@ class SudokuPuzzle:
         #print(grid)
         for cell in self.squares:
             #print(grid)
-            if j < 9:
+            if j <= self.size:
                 if grid[j][i]!=0:
                     values[cell] = str(grid[j][i])
                 else:
                     values[cell] = self.digits
                 i = i +1
-                if i == 9:
+                if i == self.size:
                     i = 0
                     j = j + 1 
-        #print(values)
+        print(values)
         return values
-
-
+    
     def check_validity(self):
         """
         Checks the validity of the input puzzle.
