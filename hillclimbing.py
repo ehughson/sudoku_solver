@@ -43,10 +43,13 @@ class HillClimbing:
 
     def __init__(self, puzzle, max_runtime, iterations):
         self.start_state = puzzle
+        self.non_fixed_values = list()
+        emp_list = []
+        for row in self.start_state.board:
+            self.non_fixed_values.append(emp_list)
+        self.symbol_set = set(self.start_state.symbols)
         self.create_start_state()
         self.current_state = self.start_state
-        self.symbol_set = set(self.puzzle.symbols)
-        self.non_fixed_values = [[]]
         self.max_runtime = max_runtime
         self.iterations = iterations
 
@@ -56,30 +59,54 @@ class HillClimbing:
         for row in self.start_state.board:
             row_symbol_set = set(row)
             avail_symbol_set = self.symbol_set.difference(row_symbol_set)
+            sel_row = []
+            col = 0
             for i in row:
-                if row[i] == " ":
-                    row[i] = avail_symbol_set.pop()
-                    self.non_fixed_values[row_num].append(i)
+                if i == "":
+                    i = avail_symbol_set.pop()
+                    row[col] = i
+                    sel_row.append(col)
+                col+=1
+            self.non_fixed_values[row_num] = sel_row
             self.start_state.board[row_num] = row
             row_num += 1
 
-        print("Start state : ", self.start_state)
+
+    def sel_row(self, state: SudokuPuzzle):
+        if state.size == 1:
+            return 0
+
+        choices = []
+
+        for i in range(len(self.non_fixed_values)):
+            row = self.non_fixed_values[i]
+            if len(row) > 0:
+                choices.append(i)
+
+        return random.choice(choices)
 
     def successor_function(self, state: SudokuPuzzle):
         """
         creates a successor state by swapping any two non fixed values in the same row selected randomly
         """
 
-        sel_row = random.randint(1, state.size)
-        len_fixed = len(self.non_fixed_values[sel_row])
-        "swap values are chosen randomly"
-        fix1 = random.randint(1, len_fixed)
-        fix2 = random.randint(1, len_fixed)
-        pos1 = self.non_fixed_values[sel_row][fix1]
-        pos2 = self.non_fixed_values[sel_row][fix2]
-        temp = self.state[sel_row][pos1]
-        self.state[sel_row][pos1] = self.state[sel_row][pos2]
-        self.state[sel_row][pos2] = temp
+        sel_row = self.sel_row(state)
+        row = self.non_fixed_values[sel_row]
+        len_fixed = len(row)
+        if len_fixed > 1:
+           fix1 = random.randint(0, len_fixed-1)
+           fix2 = random.randint(0, len_fixed-1)
+        else:
+            fix1 = 0
+            fix2 = 0
+            fix2 = 0
+        pos1 = row[fix1]
+        pos2 = row[fix2]
+        temp_row = state.board[sel_row]
+        temp = temp_row[pos1]
+        temp_row[pos1] = temp_row[pos2]
+        temp_row[pos2] = temp
+        state.board[sel_row] = temp_row
         return state
 
     def heuristic_function(self, state: SudokuPuzzle):
@@ -105,7 +132,7 @@ class HillClimbing:
                 for j in range(s):
                     r = row_start
                     for k in range(s):
-                        row = self.board[r]
+                        row = state.board[r]
                         subgrid.append(row[col])
                         r += 1
                     col += 1
@@ -135,9 +162,18 @@ class HillClimbing:
         """solver using HillClimbing"""
         start_time = time()
         # continue until solution has been found or until max_runtime has not been reached
-        while (not self.current_state.solved()) or (time() - start_time < self.max_runtime):
+        while True:#or (time() - start_time < self.max_runtime):
+            if self.current_state.solved():
+                return self.current_state
             self.current_state = self.climb(self.current_state)
-        if self.current_state.solved() and not self.current_state.invalid_state():
-            return self.current_state
-        else:
-            return None
+        return None
+
+#board = [["1",""],["","1"]]
+board = [["2","1","",""],["4","","1","2"],["1","","",""],["3","4","","1"]]
+print("board",board)
+puzzle = SudokuPuzzle(board)
+max_runtime = time()
+iterations = 5
+solution = HillClimbing(puzzle, max_runtime,iterations)
+solution.solver()
+print("solution is ", solution.current_state.board)
