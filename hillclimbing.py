@@ -48,9 +48,11 @@ class HillClimbing:
         for row in self.start_state.board:
             self.non_fixed_values.append(emp_list)
         self.symbol_set = set(self.start_state.symbols)
+        self.choices = []
         self.create_start_state()
         self.current_state = self.start_state
         self.iterations = iterations
+
 
     def create_start_state(self):
         """creates the start state by filling each row of the puzzle with values 1 to n"""
@@ -69,27 +71,20 @@ class HillClimbing:
             self.non_fixed_values[row_num] = sel_row
             self.start_state.board[row_num] = row
             row_num += 1
-
-
-    def sel_row(self, state: SudokuPuzzle):
-        if state.size == 1:
-            return 0
-
-        choices = []
-
         for i in range(len(self.non_fixed_values)):
             row = self.non_fixed_values[i]
-            if len(row) > 0:
-                choices.append(i)
-
-        return random.choice(choices)
+            if len(row) > 1:
+                self.choices.append(i)
 
     def successor_function(self, state: SudokuPuzzle):
         """
         creates a successor state by swapping any two non fixed values in the same row selected randomly
         """
-
-        sel_row = self.sel_row(state)
+        if state.size == 1:
+           sel_row = 0
+        else:
+           print("choice list ",self.choices)
+           sel_row = random.choice(self.choices)
         row = self.non_fixed_values[sel_row]
         len_fixed = len(row)
         if len_fixed > 1:
@@ -167,10 +162,22 @@ class HillClimbing:
         return None
 
 #board = [["1",""],["","1"]]
-board = [["2","1","",""],["4","","1","2"],["1","","",""],["3","4","","1"]]
+#board = [["2","1","",""],["4","","1","2"],["1","","",""],["3","4","","1"]]
+board = [
+         ["","","","2","6","","7","","1"],
+         ["6","8","","","7","","","9",""],
+         ["1","9","","","","4","5","",""],
+         ["8","2","","1","","","","4",""],
+         ["","","4","6","","2","9","",""],
+         ["","5","","","","3","","2","8"],
+         ["","","9","3","","","","7","4"],
+         ["","4","","","5","","","3","6"],
+         ["7","","3","","1","8","","",""],
+        ]
 print("board",board)
 puzzle = SudokuPuzzle(board)
 iterations = 5
 solution = HillClimbing(puzzle,iterations)
-solution.solver()
-print("solution is ", solution.current_state.board)
+sol = solution.solver()
+print("solution using HillClimber is ", solution.current_state.board)
+sol.print_sudoku()
