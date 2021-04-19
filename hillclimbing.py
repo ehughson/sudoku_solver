@@ -41,7 +41,7 @@ class HillClimbing:
         calculates the heuristic of the current state
     """
 
-    def __init__(self, puzzle, max_runtime, iterations):
+    def __init__(self, puzzle, iterations):
         self.start_state = puzzle
         self.non_fixed_values = list()
         emp_list = []
@@ -50,7 +50,6 @@ class HillClimbing:
         self.symbol_set = set(self.start_state.symbols)
         self.create_start_state()
         self.current_state = self.start_state
-        self.max_runtime = max_runtime
         self.iterations = iterations
 
     def create_start_state(self):
@@ -160,9 +159,8 @@ class HillClimbing:
 
     def solver(self):
         """solver using HillClimbing"""
-        start_time = time()
-        # continue until solution has been found or until max_runtime has not been reached
-        while True:#or (time() - start_time < self.max_runtime):
+        # continue until solution has been found
+        while True:
             if self.current_state.solved():
                 return self.current_state
             self.current_state = self.climb(self.current_state)
@@ -172,8 +170,7 @@ class HillClimbing:
 board = [["2","1","",""],["4","","1","2"],["1","","",""],["3","4","","1"]]
 print("board",board)
 puzzle = SudokuPuzzle(board)
-max_runtime = time()
 iterations = 5
-solution = HillClimbing(puzzle, max_runtime,iterations)
+solution = HillClimbing(puzzle,iterations)
 solution.solver()
 print("solution is ", solution.current_state.board)
