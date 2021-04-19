@@ -45,6 +45,7 @@ class Stochastic:
         for row in self.start_state.board:
             self.non_fixed_values.append(emp_list)
         self.symbol_set = set(self.start_state.symbols)
+        self.choices = []
         self.create_start_state()
         self.current_state = self.start_state
         self.alpha = alpha_val
@@ -66,27 +67,22 @@ class Stochastic:
             self.non_fixed_values[row_num] = sel_row
             self.start_state.board[row_num] = row
             row_num += 1
-
-
-    def sel_row(self, state: SudokuPuzzle):
-        if state.size == 1:
-            return 0
-
-        choices = []
-
         for i in range(len(self.non_fixed_values)):
             row = self.non_fixed_values[i]
-            if len(row) > 0:
-                choices.append(i)
-
-        return random.choice(choices)
+            if len(row) > 1:
+                self.choices.append(i)
 
     def successor_function(self, state: SudokuPuzzle):
         """
         creates a successor state by swapping any two non fixed values in the same row selected randomly
         """
 
-        sel_row = self.sel_row(state)
+        if state.size == 1:
+           sel_row = 0
+        else:
+           rand_num = random.randint(0, len(self.choices)-1)
+           sel_row = self.choices[rand_num]
+
         row = self.non_fixed_values[sel_row]
         len_fixed = len(row)
         if len_fixed > 1:
@@ -94,7 +90,6 @@ class Stochastic:
            fix2 = random.randint(0, len_fixed-1)
         else:
             fix1 = 0
-            fix2 = 0
             fix2 = 0
         pos1 = row[fix1]
         pos2 = row[fix2]
@@ -167,26 +162,29 @@ class Stochastic:
         else:
             return None
 
-board = [["1",""],["","1"]]
+#board = [["1",""],["","1"]]
 #board = [["2","1","",""],["4","","1","2"],["1","","",""],["3","4","","1"]]
 
-#board = [
-#         ["","","","2","6","","7","","1"],
-#         ["6","8","","","7","","","9",""],
-#         ["1","9","","","","4","5","",""],
-#         ["8","2","","1","","","","4",""],
-#         ["","","4","6","","2","9","",""],
-#         ["","5","","","","3","","2","8"],
-#         ["","","9","3","","","","7","4"],
-#         ["","4","","","5","","","3","6"],
-#         ["7","","3","","1","8","","",""],
-#        ]
+board = [
+         ["","","","2","6","","7","","1"],
+         ["6","8","","","7","","","9",""],
+         ["1","9","","","","4","5","",""],
+         ["8","2","","1","","","","4",""],
+         ["","","4","6","","2","9","",""],
+         ["","5","","","","3","","2","8"],
+         ["","","9","3","","","","7","4"],
+         ["","4","","","5","","","3","6"],
+         ["7","","3","","1","8","","",""],
+        ]
 print("board",board)
 puzzle1 = SudokuPuzzle(board)
 puzzle1.print_sudoku()
-alpha1 = 0.99
+alpha1 = 0.5
 solution = Stochastic(puzzle1, alpha1)
 sol = solution.solver()
-print("solution using Stochastic is ", solution.current_state.board)
+print("Last state using Stochastic is ", solution.current_state.board)
 if sol != None:
+   print("Solution found!")
    sol.print_sudoku()
+else:
+    print("No solution found")
