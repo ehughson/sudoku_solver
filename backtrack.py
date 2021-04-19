@@ -80,9 +80,10 @@ if __name__ == '__main__':
         print("the symbols are:", test_bt.symbols)
 
         back_track = backtrack(board)
+        print(back_track)
         backtrack_output = back_track.solveSudoku()
-
         print(backtrack_output)
+
 
 
 
