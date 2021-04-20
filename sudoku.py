@@ -8,28 +8,23 @@ numbers = '123456789'
 class Sudoku:
 
     def __init__(self, board):
-        self.variables, self.domains, self.constraints, self.neighbors, self.pruned = list(), dict(), list(), dict(), dict()
+        self.variables, self.domains, self.constraints, self.neighbors, self.pruned \
+            = list(), dict(), list(), dict(), dict()
         self.prepare(board)
 
     def prepare(self, board):
 
         game = list(board)
         print("here is the game board:", game)
-
         #a = characters
         #b = numbers
         self.variables =  [a + b for a in characters for b in numbers]
         #print(self.variables)
-    
         #if its 0 then it gets all possible values if its already assigned a number then it gets stuck with that number
         self.domains = {v: list(range(1, 10)) if game[i] == 0 else [int(game[i])] for i, v in enumerate(self.variables)}
-
         #print(self.domains)
-
         #if assigned a value of 0, then it gets pruned and is given an empty list
         self.pruned = {v: list() if game[i] == 0 else [int(game[i])] for i, v in enumerate(self.variables)}
-        
-
         #print(self.pruned)
 
         self.build_constraints() #builds all possible constraints???
@@ -148,3 +143,7 @@ class Sudoku:
 
         elif mode == 'file':
             return
+
+
+sample_obj = Sudoku()
+sample_obj.prepare()

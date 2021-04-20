@@ -4,9 +4,6 @@ import numpy as np
 from random import sample
 from itertools import chain
 
-
-
-
 def ac3(sudoku):
 
     queue = list(sudoku.constraints)

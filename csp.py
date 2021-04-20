@@ -31,7 +31,9 @@ class csp:
         
         self.peers = dict((s, set(sum(self.units[s],[]))-set([s])) for s in self.squares)
         #print(self.peers)
-        self.constraints = {(variable, peer) for variable in self.squares for peer in self.peers[variable]} #all the arcs A<B = A<B and B<A
+        self.constraints = {(variable, peer) for variable in self.squares for peer in self.peers[variable]}
+        #all the arcs A<B = A<B and B<A
+
         #print(self.constraints)
         #print("here are the constraints:", len(self.constraints))
 
