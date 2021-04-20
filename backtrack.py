@@ -4,11 +4,15 @@ from math import sqrt
 from time import time
 from SudokuPuzzle import SudokuPuzzle
 
-class backtrack():
-        def __init__(self, puzzle):
-                self.grid = puzzle
+#reference: https://www.geeksforgeeks.org/backtracking-introduction/
 
-        def findNextCellToFill(self, i, j):
+class backtrack():
+        def __init__(self, puzzle, base):
+                self.grid = puzzle
+                self.box_size = base
+
+        def foundSolution(self, i, j):
+
                 for x in range(i,9):
                         for y in range(j,9):
                                 if self.grid[x][y] == 0:
@@ -17,35 +21,48 @@ class backtrack():
                         for y in range(0,9):
                                 if self.grid[x][y] == 0:
                                         return x,y
-                return -1,-1
+                return None, None
 
-        def isValid(self, i, j, e):
-                rowOk = all([e != self.grid[i][x] for x in range(9)])
-                if rowOk:
-                        columnOk = all([e != self.grid[x][j] for x in range(9)])
-                        if columnOk:
-                                # finding the top left x,y co-ordinates of the section containing the i,j cell
-                                secTopX, secTopY = 3 *(i//3), 3 *(j//3) #floored quotient should be used here. 
-                                for x in range(secTopX, secTopX+3):
-                                        for y in range(secTopY, secTopY+3):
-                                                if self.grid[x][y] == e:
-                                                        return False
-                                return True
-                return False
+        def isValid(self, i, j, num):
+                for x in range(len(self.grid)):
+                        if self.grid[i][x] == num:
+                                return False 
+                
+                for x in range(len(self.grid)):
+                        if self.grid[x][j]  == num:
+                                return False
+
+                rowVal, colVal = self.box_size *(i//self.box_size), self.box_size *(j//self.box_size)
+                for x in range(rowVal, rowVal+self.box_size):
+                        for y in range(colVal, colVal+self.box_size):
+                                if self.grid[x][y] == num:
+                                        return False
+                return True
 
         #i = 0
+        def applyValue(self, i, j, val):
+                self.grid[i][j] = val
+                return 
+        
+        def removeValue(self, i, j):
+                self.grid[i][j] = 0
+                return
+
+
         def solveSudoku(self, i=0, j=0):
-                i,j = self.findNextCellToFill(i, j)
-                if i == -1:
-                        return True
-                for e in range(1,10):
+                i,j = self.foundSolution(i, j) #find next cell that is worth completing
+                if i == None or j == None:
+                        return True #puzzle is solved
+                
+                #print(len(self.grid)+1)
+                for e in range(1,len(self.grid) +1):
                         if self.isValid(i,j,e):
-                                self.grid[i][j] = e
+                                self.applyValue(i, j, e)
                                 #print(grid)
                                 if self.solveSudoku( i, j):
                                         return self.grid
                                 # Undo the current cell for backtracking
-                                self.grid[i][j] = 0
+                                self.removeValue(i, j)
                                 #print(i+1)
                 return False
 
@@ -79,10 +96,11 @@ if __name__ == '__main__':
         print("the results of sudokupuzzle:",  test_bt.board)
         print("the symbols are:", test_bt.symbols)
 
-        back_track = backtrack(board)
+        back_track = backtrack(board, base)
+        print(back_track)
         backtrack_output = back_track.solveSudoku()
-
         print(backtrack_output)
+        test_bt.print_sudoku()
 
 
 

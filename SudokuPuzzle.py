@@ -37,8 +37,47 @@ class SudokuPuzzle:
         for i in range(self.size):
             self.symbols.append(str(i+1))
         self.symbols.sort()
+        self.digits =  self.cols = "123456789"
+        self.rows = "ABCDEFGHI"
 
+        def cross(A, B):
+            return [a + b for a in A for b in B]
 
+        self.squares = cross(self.rows, self.cols)
+        #print(self.squares)
+        self.domain = self.getDict(self.board)
+        self.values = self.getDict(self.board)		
+        #print("here are the domains: ", len(self.domain))
+        #print("here are the values:", len(self.values))
+        self.unitlist = ([cross(self.rows, c) for c in self.cols] + [cross(r, self.cols) for r in self.rows] + [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')])
+        
+        #print(self.unitlist)
+        self.units = dict((s, [u for u in self.unitlist if s in u]) for s in self.squares)
+
+        #print(self.units)        
+        self.constraints = {(variable, i) for variable in self.squares for peer in self.units[variable] for i in peer if i != variable}
+        #print(self.constraints)
+    
+    def getDict(self, grid =""):
+        i = 0
+        j = 0
+        values = dict()
+        
+        #print(grid)
+        for cell in self.squares:
+            #print(grid)
+            if j <= self.size:
+                if grid[j][i]!=0:
+                    values[cell] = str(grid[j][i])
+                else:
+                    values[cell] = self.digits
+                i = i +1
+                if i == self.size:
+                    i = 0
+                    j = j + 1 
+        print(values)
+        return values
+    
     def check_validity(self):
         """
         Checks the validity of the input puzzle.
@@ -125,15 +164,25 @@ class SudokuPuzzle:
 
         return True
 
-    def print_sudoku(self):
+    def print_sudoku(self, values = None):
         """
         Prints the sudoku puzzle
         """
-        for row in self.board:
-            print("|", end=" ")
-            for i in range(self.size):
-                print(row[i], "|", end=" ")
-            print("\n")
+        print(values)
+        if values:
+            for row in values:
+                #print(row)
+                print("|", end=" ")
+                for i in row:
+                    print(i, "|", end=" ")
+                print("\n")
+        else:
+            for row in self.board:
+                print("|", end=" ")
+                for i in range(self.size):
+                    print(row[i], "|", end=" ")
+                print("\n")
+
 
 
 
