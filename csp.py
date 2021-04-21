@@ -70,6 +70,9 @@ class AC3():
         return sudoku_grid
 
     def isconsistent(self, x, Xi, Xj):
+        """
+        Check inconsistency
+        """
         for y in self.grid.values[Xj]:
             for peer in self.grid.units[Xi]:
                 if Xj in peer and y != x:
