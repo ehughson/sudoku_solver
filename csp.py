@@ -70,7 +70,7 @@ class AC3():
                 print("WE HAVE AN ERROR -- VALUE CONTAINS MORE THAN ONE VALUE")
                 exit(-1)
             interarray.append(self.grid.values[key])
-            if r == 9:
+            if r == self.grid.size:
                 r = 0
                 sudoku_grid.append(interarray)
             #print(val)
