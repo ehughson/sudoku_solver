@@ -76,11 +76,11 @@ class Stochastic:
             if len(row) > 1:
                 self.choices.append(i)
         self.current_state = start_state
-        print("******************************************************************")
-        print("Start state : ")
-        self.current_state.print_sudoku()
-        print("------------------------------------------------------------------")
-        print('heuristic of start state', self.heuristic_function(self.current_state))
+        #print("******************************************************************")
+        #print("Start state : ")
+        #self.current_state.print_sudoku()
+        #print("------------------------------------------------------------------")
+        #print('heuristic of start state', self.heuristic_function(self.current_state))
 
 
     def successor_function(self, curr_state: SudokuPuzzle):
@@ -172,26 +172,26 @@ class Stochastic:
         t = 1
         for i in range(10000):
             t = self.alpha * t
-            print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
-            print("Temperature = ",t)
+            #print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+            #print("Temperature = ",t)
             if t == 0:
                 return self.current_state
             if self.current_state.solved():
                 return self.current_state
             next_state = self.successor_function(self.current_state)
-            print('Heuristic of CURRENT state = ', self.heuristic_function(self.current_state))
-            print('Heuristic of NEXT state = ', self.heuristic_function(next_state))
+            #print('Heuristic of CURRENT state = ', self.heuristic_function(self.current_state))
+            #print('Heuristic of NEXT state = ', self.heuristic_function(next_state))
             delta = self.heuristic_function(self.current_state) - self.heuristic_function(next_state)
-            print("DELTA = ", delta)
+            #print("DELTA = ", delta)
             if delta > 0:
                 self.current_state = copy.deepcopy(next_state)
-                print("to next state since delta is positive")
+                #print("to next state since delta is positive")
             else:
                 probability = math.exp(delta / t)
-                print("probability =",probability)
+                #print("probability =",probability)
                 if self.jump(probability):
                     self.current_state = copy.deepcopy(next_state)
-                    print("to next state with probabiility")
+                    #print("to next state with probabiility")
 
         if self.current_state.solved():
             return self.current_state
@@ -201,6 +201,7 @@ class Stochastic:
 #board = [["1",""],["","1"]]
 #board = [["2","1","",""],["4","","1","2"],["1","","",""],["3","4","","1"]]
 
+"""
 board = [
          ["","","","2","6","","7","","1"],
          ["6","8","","","7","","","9",""],
@@ -212,18 +213,4 @@ board = [
          ["","4","","","5","","","3","6"],
          ["7","","3","","1","8","","",""],
         ]
-print("board",board)
-puzzle1 = SudokuPuzzle(board)
-puzzle1.print_sudoku()
-alpha1 = 0.99
-solution = Stochastic(puzzle1, alpha1)
-sol = solution.solver()
-print("Last state using Stochastic is ", solution.current_state.board)
-if sol is not None:
-    if sol.solved():
-        print("solution using Stochastic is ")
-        sol.print_sudoku()
-    else:
-        print("No solution ")
-else:
-    print("No solution ")
+"""

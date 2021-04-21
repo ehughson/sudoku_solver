@@ -2,7 +2,7 @@ import numpy as np
 from random import sample
 from math import sqrt
 from time import time
-from SudokuPuzzle import SudokuPuzzle
+#from SudokuPuzzle import SudokuPuzzle
 import queue
 
 #constraint propogation with AC3
@@ -26,7 +26,7 @@ class AC3():
         calculates the heuristic of the current state
     """
 
-    def __init__(self, csp: SudokuPuzzle):
+    def __init__(self, csp):
         """
         input is the Sudoku puzzle
         """
@@ -59,9 +59,9 @@ class AC3():
             if r == 0:
                 interarray = []
             r = r + 1
-            if len(self.grid.values[key]) > 1:
-                print("WE HAVE AN ERROR -- VALUE CONTAINS MORE THAN ONE VALUE")
-                exit(-1)
+            #if len(self.grid.values[key]) > 1:
+                #print("WE HAVE AN ERROR -- VALUE CONTAINS MORE THAN ONE VALUE")
+                #exit(-1)
             interarray.append(self.grid.values[key])
             if r == self.grid.size:
                 r = 0
@@ -79,41 +79,3 @@ class AC3():
         return False
     
 
-if __name__ == '__main__':
-        base = 3
-
-        side = base * base
-
-        def pattern(r, c):
-                return (base * (r%base)+r//base+c)%side
-
-        def shuffle(s):
-                return sample(s, len(s))
-
-        rBase = range(base)
-        rows1 = [g*base + r for g in shuffle(rBase) for r in shuffle(rBase)]
-        colum = [g*base +c for g in shuffle(rBase) for c in shuffle(rBase)]
-
-        nums = shuffle(range(1, base*base+1))
-
-        board = [[ str(nums[pattern(r, c )]) for c in colum] for r in rows1]
-        
-        #squares = side*side 
-        #print(3//4)
-        empties = (side*side) * 3//6
-        #empties = 37
-
-        #print(empties)
-
-        for p in sample(range(side*side), empties):
-                board[p//side][p%side] = str(0)
-        
-        #print(board)
-        print(board)
-        test_bt = SudokuPuzzle(board)
-        #print("the results of sudokupuzzle:",  test_bt.board)
-        #print("the symbols are:", test_bt.symbols)
-        sudoku = AC3(test_bt)
-        final_sudoku = sudoku.AC3_solve()
-        print(final_sudoku)
-        test_bt.print_sudoku(final_sudoku)
