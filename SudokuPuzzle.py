@@ -37,45 +37,76 @@ class SudokuPuzzle:
         for i in range(self.size):
             self.symbols.append(str(i+1))
         self.symbols.sort()
-        self.digits =  self.cols = "123456789"
-        self.rows = "ABCDEFGHI"
+        self.cols = "1"
+        self.rows = "A"
+        self.unitlist = ""
+        self.init_csp_values()
 
-        def cross(A, B):
-            return [a + b for a in A for b in B]
-
-        self.squares = cross(self.rows, self.cols)
-        #print(self.squares)
+        self.squares = self.cross(self.rows, self.cols)
         self.domain = self.getDict(self.board)
         self.values = self.getDict(self.board)
-        #print("here are the domains: ", len(self.domain))
-        #print("here are the values:", len(self.values))
-        self.unitlist = ([cross(self.rows, c) for c in self.cols] + [cross(r, self.cols) for r in self.rows] + [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')])
 
-        #print(self.unitlist)
         self.units = dict((s, [u for u in self.unitlist if s in u]) for s in self.squares)
-
-        #print(self.units)
         self.constraints = {(variable, i) for variable in self.squares for peer in self.units[variable] for i in peer if i != variable}
-        #print(self.constraints)
-    
+
+    def init_csp_values(self):
+        digit = "1"
+        alph = "A"
+        for i in range(self.size-1):
+            digit = chr(ord(digit) + 1)
+            self.cols = self.cols + digit
+            alph = chr(ord(alph) + 1)
+            self.rows = self.rows + alph
+        cross1 = []
+        cross2 = []
+        cross3 = []
+        for c in self.cols:
+            cross1.append(self.cross(self.rows, c))
+        for r in self.rows:
+            cross2.append(self.cross(r, self.cols))
+        s = int(sqrt(self.size))
+        rs_list = []
+        cs_list = []
+        for r in range(s):
+            st = int(s*r)
+            en = int(st + s)
+            rs_list.append(self.rows[st: en])
+            cs_list.append(self.cols[st: en])
+        for rs in rs_list:
+            for cs in cs_list:
+               cross3.append(self.cross(rs, cs))
+        self.unitlist = cross1 + cross2 + cross3
+
+    def cross(self, A, B):
+        return [a + b for a in A for b in B]
+
     def getDict(self, grid =""):
+        "Creates the dict for CSP"
         i = 0
         j = 0
         values = dict()
 
-        #print(grid)
+        "Converting grid elements into integers. Space is converted into 0"
+        r = 0
+        for row in grid:
+            for c in range(len(row)):
+                if row[c] == '':
+                    row[c] = 0
+                else:
+                    row[c] = int(row[c])
+            grid[r] = row
+            r+=1
+
         for cell in self.squares:
-            #print(grid)
             if j <= self.size:
                 if grid[j][i]!=0:
                     values[cell] = str(grid[j][i])
                 else:
-                    values[cell] = self.digits
+                    values[cell] = self.cols
                 i = i +1
                 if i == self.size:
                     i = 0
                     j = j + 1
-        print(values)
         return values
 
     def check_validity(self):
@@ -168,33 +199,24 @@ class SudokuPuzzle:
         """
         Prints the sudoku puzzle
         """
-        #print('values = ', values)
         if values:
-            for row in values:
-                #print(row)
-                print("|", end=" ")
-                for i in row:
-                    print(i, "|", end=" ")
-                print("\n")
+            print_board = values
         else:
-            r = 1
-            for row in self.board:
-                c = 1
-                if r%2 == 0:
-
-                for i in range(self.size):
-                    print("-")
-                print("\n")
-                print("|", end=" ")
-                for i in range(self.size):
-                    if c%2 == 0:
-                        print(row[i], "|", end=" ")
-                    else:
-                        print(row[i], "|", end=" ")
-                r+=1
-            print("\n")
+            print_board = self.board
+        s = int(sqrt(self.size))
+        r = 1
+        for row in print_board:
+            c = 1
+            print('\n')
+            print("||", end=" ")
             for i in range(self.size):
-                print("-")
+                if c % s == 0:
+                    print(row[i], "||", end=" ")
+                else:
+                    print(row[i], "|", end=" ")
+                c+=1
+            r+=1
+
 
 
 
