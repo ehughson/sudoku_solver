@@ -46,15 +46,15 @@ class SudokuPuzzle:
         self.squares = cross(self.rows, self.cols)
         #print(self.squares)
         self.domain = self.getDict(self.board)
-        self.values = self.getDict(self.board)		
+        self.values = self.getDict(self.board)
         #print("here are the domains: ", len(self.domain))
         #print("here are the values:", len(self.values))
         self.unitlist = ([cross(self.rows, c) for c in self.cols] + [cross(r, self.cols) for r in self.rows] + [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')])
-        
+
         #print(self.unitlist)
         self.units = dict((s, [u for u in self.unitlist if s in u]) for s in self.squares)
 
-        #print(self.units)        
+        #print(self.units)
         self.constraints = {(variable, i) for variable in self.squares for peer in self.units[variable] for i in peer if i != variable}
         #print(self.constraints)
     
@@ -62,7 +62,7 @@ class SudokuPuzzle:
         i = 0
         j = 0
         values = dict()
-        
+
         #print(grid)
         for cell in self.squares:
             #print(grid)
@@ -74,10 +74,10 @@ class SudokuPuzzle:
                 i = i +1
                 if i == self.size:
                     i = 0
-                    j = j + 1 
+                    j = j + 1
         print(values)
         return values
-    
+
     def check_validity(self):
         """
         Checks the validity of the input puzzle.
@@ -164,11 +164,11 @@ class SudokuPuzzle:
 
         return True
 
-    def print_sudoku(self, values = None):
+    def print_sudoku(self,values=None):
         """
         Prints the sudoku puzzle
         """
-        print(values)
+        #print('values = ', values)
         if values:
             for row in values:
                 #print(row)
@@ -177,11 +177,27 @@ class SudokuPuzzle:
                     print(i, "|", end=" ")
                 print("\n")
         else:
+            r = 1
             for row in self.board:
+                c = 1
+                if r%2 == 0:
+
+                for i in range(self.size):
+                    print("-")
+                print("\n")
                 print("|", end=" ")
                 for i in range(self.size):
-                    print(row[i], "|", end=" ")
-                print("\n")
+                    if c%2 == 0:
+                        print(row[i], "|", end=" ")
+                    else:
+                        print(row[i], "|", end=" ")
+                r+=1
+            print("\n")
+            for i in range(self.size):
+                print("-")
+
+
+
 
 
 
