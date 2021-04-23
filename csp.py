@@ -1,22 +1,21 @@
-import numpy as np
+import numpy as np 
 from random import sample
 from math import sqrt
 from time import time
-from SudokuPuzzle import SudokuPuzzle
+#from SudokuPuzzle import SudokuPuzzle
 import queue
+
+#constraint propogation with AC3
 
 class AC3():
     """
     A class to represent a Sudoku solver using Constraint Satisfaction Problem
     Reference : <TO BE ADDED>
-
     About the algorithm
     <TO BE ADDED>
-
     Attributes
     ----------
     csp : object of the SudokuPuzzle class
-
     Methods
     -------
     AC3_solve
@@ -27,7 +26,7 @@ class AC3():
         calculates the heuristic of the current state
     """
 
-    def __init__(self, csp: SudokuPuzzle):
+    def __init__(self, csp):
         """
         input is the Sudoku puzzle
         """
@@ -60,9 +59,9 @@ class AC3():
             if r == 0:
                 interarray = []
             r = r + 1
-            if len(self.grid.values[key]) > 1:
-                print("WE HAVE AN ERROR -- VALUE CONTAINS MORE THAN ONE VALUE")
-                exit(-1)
+            #if len(self.grid.values[key]) > 1:
+                #print("WE HAVE AN ERROR -- VALUE CONTAINS MORE THAN ONE VALUE")
+                #exit(-1)
             interarray.append(self.grid.values[key])
             if r == self.grid.size:
                 r = 0
@@ -78,26 +77,5 @@ class AC3():
                 if Xj in peer and y != x:
                     return True
         return False
+    
 
-if __name__ == '__main__':
-
-
-    #board = [["1",""],["","1"]]
-    # board = [["2","1","",""],["4","","1","2"],["1","","",""],["3","4","","1"]]
-    # board = [["2","","",""],["","","2",""],["","4","",""],["","","","3"]]
-    board = [
-        ["", "", "", "2", "6", "", "7", "", "1"],
-        ["6", "8", "", "", "7", "", "", "9", ""],
-        ["1", "9", "", "", "", "4", "5", "", ""],
-        ["8", "2", "", "1", "", "", "", "4", ""],
-        ["", "", "4", "6", "", "2", "9", "", ""],
-        ["", "5", "", "", "", "3", "", "2", "8"],
-        ["", "", "9", "3", "", "", "", "7", "4"],
-        ["", "4", "", "", "5", "", "", "3", "6"],
-        ["7", "", "3", "", "1", "8", "", "", ""],
-    ]
-
-    test_bt = SudokuPuzzle(board)
-    sudoku = AC3(test_bt)
-    final_sudoku = sudoku.AC3_solve()
-    test_bt.print_sudoku(final_sudoku)

@@ -81,11 +81,11 @@ class HillClimbing:
             if len(row) > 1:
                 self.choices.append(i)
         self.current_state = start_state
-        print("******************************************************************")
-        print("Start state : ")
-        self.current_state.print_sudoku()
-        print("------------------------------------------------------------------")
-        print('heuristic of start state', self.heuristic_function(self.current_state))
+        #print("******************************************************************")
+        #print("Start state : ")
+        #self.current_state.print_sudoku()
+        #print("------------------------------------------------------------------")
+        #print('heuristic of start state', self.heuristic_function(self.current_state))
 
 
     def successor_function(self, curr_state: SudokuPuzzle):
@@ -172,17 +172,17 @@ class HillClimbing:
         """finding local maxima using heuristic function"""
 
         next_state = self.successor_function(state)
-        print("------------------------------------------------------------------")
-        print("Next state : ")
-        state.print_sudoku()
-        print("------------------------------------------------------------------")
-        print('Heuristic of CURRENT state = ', self.heuristic_function(state))
-        print('Heuristic of NEXT state = ', self.heuristic_function(next_state))
-        print("******************************************************************")
+        #print("------------------------------------------------------------------")
+        #print("Next state : ")
+        #state.print_sudoku()
+        #print("------------------------------------------------------------------")
+        #print('Heuristic of CURRENT state = ', self.heuristic_function(state))
+        #print('Heuristic of NEXT state = ', self.heuristic_function(next_state))
+        #print("******************************************************************")
 
         next_state.print_sudoku()
         if self.heuristic_function(next_state) == 0:
-            print('Solved ! : Heuristics has reached 0')
+            #print('Solved ! : Heuristics has reached 0')
             return next_state
         else:
             # maximum iterations reached - need to restart
@@ -207,37 +207,13 @@ class HillClimbing:
         while True:
             i+=1
             if self.current_state.solved():
-                print('Solved !')
+                #print('Solved !')
                 return self.current_state
             self.current_state = self.climb(self.current_state, 1)
             #in case of restart, create a new random start state
             if self.current_state.board == self.initial_state.board:
                 self.create_start_state()
-        print('Total number of iterations = ', i)
+        #print('Total number of iterations = ', i)
         return None
 
-#board = [["1",""],["","1"]]
-#board = [["2","1","",""],["4","","1","2"],["1","","",""],["3","4","","1"]]
-#board = [["2","","",""],["","","2",""],["","4","",""],["","","","3"]]
-board = [
-         ["","","","2","6","","7","","1"],
-         ["6","8","","","7","","","9",""],
-         ["1","9","","","","4","5","",""],
-         ["8","2","","1","","","","4",""],
-         ["","","4","6","","2","9","",""],
-         ["","5","","","","3","","2","8"],
-         ["","","9","3","","","","7","4"],
-         ["","4","","","5","","","3","6"],
-         ["7","","3","","1","8","","",""],
-        ]
 
-print("board",board)
-puzzle = SudokuPuzzle(board)
-iterations = 600
-solution = HillClimbing(puzzle,iterations)
-sol = solution.solver()
-if sol.solved():
-   print("solution using HillClimber is ")
-   sol.print_sudoku()
-else:
-    print("No solution ")

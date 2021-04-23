@@ -1,4 +1,5 @@
 from math import sqrt
+
 class SudokuPuzzle:
     """
     A class to represent a single sudoku puzzle.
@@ -91,7 +92,7 @@ class SudokuPuzzle:
         for row in grid:
             for c in range(len(row)):
                 if row[c] == '':
-                    row[c] = 0
+                    row[c] = '0'
                 else:
                     row[c] = int(row[c])
             grid[r] = row

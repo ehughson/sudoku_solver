@@ -66,41 +66,6 @@ class backtrack():
                                 #print(i+1)
                 return False
 
-if __name__ == '__main__':
-        base = 3
-
-        side = base * base
-
-        def pattern(r, c):
-                return (base * (r%base)+r//base+c)%side
-
-        def shuffle(s):
-                return sample(s, len(s))
-
-        rBase = range(base)
-        rows = [g*base + r for g in shuffle(rBase) for r in shuffle(rBase)]
-        cols = [g*base +c for g in shuffle(rBase) for c in shuffle(rBase)]
-
-        nums = shuffle(range(1, base*base+1))
-
-        board = [[ nums[pattern(r, c )] for c in cols] for r in rows]
-        
-        squares = side*side 
-        empties = squares *3//4 
-
-        for p in sample(range(squares), empties):
-                board[p//side][p%side] = 0
-        
-        print(board)
-        test_bt = SudokuPuzzle(board)
-        print("the results of sudokupuzzle:",  test_bt.board)
-        print("the symbols are:", test_bt.symbols)
-
-        back_track = backtrack(board, base)
-        print(back_track)
-        backtrack_output = back_track.solveSudoku()
-        print(backtrack_output)
-        test_bt.print_sudoku()
 
 
 
