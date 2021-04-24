@@ -60,16 +60,7 @@ class AC3():
 
         #print(len(self.grid.board))
         return
-        sudoku_grid = []
-        r = 0
-        back_track_flag = False
-        new_grid = list(self.grid.values.values())
-        #print(new_grid)
-        if any(len(val) > 1 for val in new_grid):
-            back_track_flag = True
-            return new_grid, back_track_flag
-        else:
-            return new_grid, back_track_flag
+       
           
 
     def isconsistent(self, x, Xi, Xj):

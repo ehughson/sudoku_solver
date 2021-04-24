@@ -15,7 +15,7 @@ class backtrack():
 
                 for x in range(i,len(self.grid)):
                         for y in range(j,len(self.grid)):
-                                if (self.grid[x][y] == 0) or self.grid[x][y] > len(self.grid):
+                                if (self.grid[x][y] == 0) or (self.grid[x][y] > len(self.grid)):
                                         #print(self.grid[x][y])
                                         return x,y
                 for x in range(0,len(self.grid)):
