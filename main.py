@@ -18,24 +18,52 @@ if __name__ == '__main__':
         print("\n################## NOW DOING AC3 ##################\n")
         t = time.time()
         test_csp = SudokuPuzzle(board)
-        sudoku = AC3(test_csp)
-        final_sudoku = sudoku.AC3_solve()
+        #print(test_csp.board)
+        sudoku = AC3(test_csp, base)
+        #print(sudoku.grid.values)
+        sudoku.AC3_solve()
+        time_taken = time.time()-t
+        
+        flag = False
+        new_grid = list(test_csp.values.values())
 
-        print("the time it took to complete AC3:", str(time.time() - t))
-        test_csp.print_sudoku(final_sudoku)
+        if any(len(val) > 1 for val in new_grid):
+                flag = True
+        
+        if flag == True:
 
+                new_board = np.array(new_grid).reshape(len(test_csp.board), len(test_csp.board))
+                #new_board_s = SudokuPuzzle(new_board)
+                t = time.time()
+                back_track_brd = backtrack(new_board, base)
+                back_track_brd_out = back_track_brd.solveSudoku()
+                time_taken2 = time.time() - t
+                
+                print("the time it took to complete AC3 using backtrack:", str(time_taken + time_taken2))
+                test_csp.print_sudoku(back_track_brd_out)
+                
+                
+        else:
 
+                print("the time it took to complete AC3:", str(time_taken))
+                new_board = np.array(new_grid).reshape(len(test_csp.board), len(test_csp.board))
+                new_board = ( [list( map(int,i) ) for i in new_board] )
+                test_csp.print_sudoku(new_board)
+       
+
+        
         print("\n################## NOW DOING BACKTRACK ##################\n")
         t = time.time() 
         test_bt = SudokuPuzzle(board)
-        back_track = backtrack(board, base)
+        print(test_bt.board)
+        back_track = backtrack(test_bt.board, base)
         backtrack_output = back_track.solveSudoku()
 
         print("the time it took to complete Backtrack:", str(time.time() - t))
-        test_bt.print_sudoku()
+        test_bt.print_sudoku(backtrack_output)
 
 
-
+        
         print("\n################## NOW DOING HILLCLIMBING ##################\n")
         t = time.time()
         puzzle = SudokuPuzzle(board)
@@ -53,3 +81,5 @@ if __name__ == '__main__':
 
         print("the time it took to complete Stochastic:", str(time.time() - t))
         puzzle1.print_sudoku()
+
+        
