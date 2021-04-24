@@ -1,5 +1,6 @@
 import copy
 import random
+import time
 from math import sqrt
 import sys
 from SudokuPuzzle import SudokuPuzzle
@@ -180,10 +181,10 @@ class HillClimbing:
         #print("------------------------------------------------------------------")
         #print("Next state : ")
         #state.print_sudoku()
-        #print("------------------------------------------------------------------")
-        #print('Heuristic of CURRENT state = ', self.heuristic_function(state))
-        #print('Heuristic of NEXT state = ', self.heuristic_function(next_state))
-        #print("******************************************************************")
+        # print("------------------------------------------------------------------")
+        # print('Heuristic of CURRENT state = ', self.heuristic_function(state))
+        # print('Heuristic of NEXT state = ', self.heuristic_function(next_state))
+        # print("******************************************************************")
 
         # next_state.print_sudoku()
         if self.heuristic_function(next_state) == 0:
@@ -196,20 +197,20 @@ class HillClimbing:
             iteration += 1
             # No improvement in heuristics -> do not go to next state but climb
             if self.heuristic_function(next_state) >= self.heuristic_function(state):
-                #print('Climbing : using current state')
+                # print('Climbing : using current state')
                 return self.climb(state, iteration)
             # Else, go to next state and climb
             else:
-                #print('Climbing : using next state')
+                # print('Climbing : using next state')
                 return self.climb(next_state, iteration)
         return state
 
     def solver(self):
         """solver using HillClimbing"""
-
+        t = time.time()
         # continue until solution has been found
         i = 0
-        while True:
+        while int(time.time() - t) < 4:
             i+=1
             if self.current_state.solved():
                 #print('Solved !')
@@ -218,6 +219,8 @@ class HillClimbing:
             #in case of restart, create a new random start state
             if self.current_state.board == self.initial_state.board:
                 self.create_start_state()
+            # print("Iteration of hillclimb", i)
+            # print("Time lapsed ", )
         #print('Total number of iterations = ', i)
         return None
 

@@ -91,6 +91,6 @@ class SudokuSolver:
         self.result = ac3_solver.AC3_solve()
         self.time_taken = time.process_time() - start
 
-solver = SudokuSolver()
-solver.solve_size9_file("easy.txt")
+#solver = SudokuSolver()
+#solver.solve_size9_file("easy.txt")
 

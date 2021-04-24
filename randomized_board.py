@@ -14,8 +14,6 @@ def main():
     3. Can the algorithms be classified as optimal or suboptimal ? 
     """
 
-
-
 def board_random( base,empty_frac = 0):
     side = base * base
     rBase = range(base)
@@ -27,7 +25,7 @@ def board_random( base,empty_frac = 0):
         empties = empty_frac
     else:
         empties = (side*side) * 4//7
-    print(empties)
+    #print(empties)
     for p in sample(range(side*side), empties):
             board[p//side][p%side] = ''
 

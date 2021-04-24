@@ -11,6 +11,25 @@ from hillclimbing import HillClimbing
 from randomized_board import board_random
 import time
 
+stoch_cnt = 0
+hill_cnt = 0
+ac3_cnt = 0
+stoch_time = 0
+hill_time = 0
+ac3_time = 0
+back_time = 0
+
+
+def reset_counts():
+    global stoch_cnt, hill_cnt, ac3_cnt, stoch_time, hill_time, ac3_time, back_time
+    stoch_cnt = 0
+    hill_cnt = 0
+    ac3_cnt = 0
+    stoch_time = 0
+    hill_time = 0
+    ac3_time = 0
+    back_time = 0
+
 def solve_size9_file(filename='easy.txt'):
         input = []
         with open(filename, 'rt') as myfile:
@@ -35,89 +54,145 @@ def solve_size9_file(filename='easy.txt'):
                         j += 1
                 board.append(row)
             if i == 9:
-                return board
+                solve_for_board(board)
+                print("---------------------------------------------")
             i += 1
 
+def solve_for_board(board):
+    global stoch_cnt, hill_cnt, ac3_cnt, stoch_time, hill_time, ac3_time, back_time
+    #print(board)
+    print("Stochastic       ",end='')
+    t = time.time()
+    puzzle = SudokuPuzzle(board)
+    stochastic_solver = Stochastic(puzzle, 0.7)
+    start = time.time()
+    result = stochastic_solver.solver()
+    time_taken = time.time() - start
+    if result:
+        stoch_cnt += 1
+        print("Solved   ",end='')
+    else:
+        print("Failed   ",end='')
+    print(str(time_taken))
+    stoch_time += int(time_taken)
+    # puzzle.print_sudoku()
 
+    print("HillClimbing     ", end='')
+    #print(board)
+    puzzle = SudokuPuzzle(board)
+    hillclimb_solver = HillClimbing(puzzle, 2000)
+    start = time.time()
+    result = hillclimb_solver.solve()
+    time_taken = time.time() - start
+    if result:
+        hill_cnt += 1
+        print("Solved   ", end='')
+    else:
+        print("Failed   ", end='')
+    print(str(time_taken))
+    hill_time += int(time_taken)
+    #puzzle.print_sudoku(result)
+
+
+    # board = board_random(base)
+    # board = solve_size9_file()
+    t = time.time()
+    test_csp = SudokuPuzzle(board, True)
+    sudoku = AC3(test_csp, base)
+    result = sudoku.AC3_solve()
+    time_taken = time.time() - t
+
+    flag = False
+    new_grid = list(test_csp.values.values())
+
+    if any(len(val) > 1 for val in new_grid):
+        flag = True
+
+    if flag == True:
+        new_board = np.array(new_grid).reshape(len(test_csp.board), len(test_csp.board))
+        # new_board_s = SudokuPuzzle(new_board)
+        t = time.time()
+        back_track_brd = backtrack(new_board, base)
+        back_track_brd_out = back_track_brd.solveSudoku()
+        time_taken2 = time.time() - t
+
+        print("AC3 + Backtrack  ",end='')
+        print("Solved   ",end='')
+        print(str(time_taken2))
+        ac3_time += int(time_taken2)
+
+    else:
+        ac3_cnt += 1
+        print("AC3              ",end='')
+        print("Solved   ",end='')
+        print(str(time_taken))
+        ac3_time += int(time_taken)
+
+
+    t = time.time()
+    test_bt = SudokuPuzzle(board, True)
+    back_track = backtrack(test_bt.board, base)
+    time_taken = time.time() - t
+    print("Backtrack        ",end='')
+    print("Solved   ",end='')
+    print(str(time_taken))
+    back_time += int(time_taken)
+
+def solved_stat(total):
+    print("***************************************")
+    print("Number of puzzles solved out of ",total)
+    print("***************************************")
+    print("Stochastic   : ", stoch_cnt)
+    print("HillClimbing : ", hill_cnt)
+    print("AC3          : ", ac3_cnt)
+    print("***************************************")
+    print("       Average Run Time                ")
+    print("***************************************")
+    print("Stochastic   : ", stoch_time/total)
+    print("HillClimbing : ", hill_time/total)
+    print("AC3          : ", ac3_time/total)
+    print("Backtracking : ", back_time/total)
+    print('#########################################')
 if __name__ == '__main__':
         base = 3
-        board = board_random(base, 56)
-        
-        print(board)
-        print("\n################## NOW DOING STOCHASTIC ##################\n")
-        t = time.time()
-        puzzle = SudokuPuzzle(board)
-        stochastic_solver = Stochastic(puzzle, 0.7)
-        start = time.process_time()
-        result = stochastic_solver.solver()
+        print("Random Puzzles with 57 empty cells")
+        print("**************************")
+        for i in range(5):
+            board = board_random(base, 56)
+            solve_for_board(board)
+            print("---------------------------------------------")
 
-        print("the time it took to complete Stochastic:", str(time.time() - t))
-        puzzle.print_sudoku()
-        
-        print("\n################## NOW DOING HILLCLIMBING ##################\n")
-        board = solve_size9_file()
-        t = time.time()
+        solved_stat(5)
+        reset_counts()
+        print("Random Puzzles with 46 empty cells")
+        print("**************************")
+        for i in range(5):
+            board = board_random(base, 46)
+            solve_for_board(board)
+            print("---------------------------------------------")
+        solved_stat()
+        reset_counts()
 
-        print(board)
-        puzzle = SudokuPuzzle(board)
-        hillclimb_solver = HillClimbing(puzzle, 50)
-        start = time.process_time()
-        result = hillclimb_solver.solve()
-        print(result)
+        print("Random Puzzles with 27 empty cells")
+        print("**************************")
+        for i in range(5):
+            board = board_random(base, 27)
+            solve_for_board(board)
+            print("---------------------------------------------")
+        solved_stat()
+        reset_counts()
 
-        print("the time it took to complete HillClimbing:", str(time.time() - t))
-        puzzle.print_sudoku(result)
-        
+        print("Easy puzzles")
+        solve_size9_file('easy.txt')
+        solved_stat(50)
+        reset_counts()
 
-        print("\n################## NOW DOING AC3 ##################\n")
-        #board = board_random(base)
-        #board = solve_size9_file()
-        t = time.time()
-        test_csp = SudokuPuzzle(board, True)
-        sudoku = AC3(test_csp, base)
-        result = sudoku.AC3_solve()
-        time_taken = time.time()-t
-        
-        flag = False
-        new_grid = list(test_csp.values.values())
+        print("Hard puzzles")
+        solve_size9_file('hard.txt')
+        solved_stat(95)
+        reset_counts()
 
-        if any(len(val) > 1 for val in new_grid):
-                flag = True
-        
-        if flag == True:
-                new_board = np.array(new_grid).reshape(len(test_csp.board), len(test_csp.board))
-                #new_board_s = SudokuPuzzle(new_board)
-                t = time.time()
-                back_track_brd = backtrack(new_board, base)
-                back_track_brd_out = back_track_brd.solveSudoku()
-                time_taken2 = time.time() - t
-                
-                print("the time it took to complete AC3 using backtrack:", str(time_taken + time_taken2))
-                test_csp.print_sudoku(back_track_brd_out)
-                
-                
-        else:
-                print("the time it took to complete AC3:", str(time_taken))
-                new_board = np.array(new_grid).reshape(len(test_csp.board), len(test_csp.board))
-                new_board = ( [list( map(int,i) ) for i in new_board] )
-                test_csp.print_sudoku(new_board)
-       
-
-
-        
-        print("\n################## NOW DOING BACKTRACK ##################\n")
-        #board = board_random(base)
-        #board = solve_size9_file()
-        print(board)
-        t = time.time() 
-        test_bt = SudokuPuzzle(board, True)
-        print(test_bt.board)
-        back_track = backtrack(test_bt.board, base)
-        backtrack_output = back_track.solveSudoku()
-
-        print("the time it took to complete Backtrack:", str(time.time() - t))
-        test_bt.print_sudoku(backtrack_output)
-
+        print("End")
 
         
         
