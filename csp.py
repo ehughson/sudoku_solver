@@ -11,12 +11,15 @@ from backtrack import backtrack
 class AC3():
     """
     A class to represent a Sudoku solver using Constraint Satisfaction Problem
-    Reference : <TO BE ADDED>
+    Reference : https://sandipanweb.wordpress.com/2017/03/17/solving-sudoku-as-a-constraint-satisfaction-problem-using-constraint-propagation-with-arc-consistency-checking-and-then-backtracking-with-minimum-remaning-value-heuristic-and-forward-checking/
+    https://medium.com/my-udacity-ai-nanodegree-notes/solving-sudoku-think-constraint-satisfaction-problem-75763f0742c9
+    https://medium.com/swlh/how-to-solve-constraint-satisfaction-problems-csps-with-ac-3-algorithm-in-python-f7a9be538cfe
     About the algorithm
     <TO BE ADDED>
     Attributes
     ----------
     csp : object of the SudokuPuzzle class
+    base: size of sudoku = n x n, where n is base
     Methods
     -------
     AC3_solve
@@ -59,7 +62,7 @@ class AC3():
                                 q.put((v, x))  # if the x domain has changed add all arcs of the form (k, x) to the queue
 
         #print(len(self.grid.board))
-        return
+        return True
        
           
 

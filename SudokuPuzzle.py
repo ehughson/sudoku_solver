@@ -1,9 +1,10 @@
 from math import sqrt
 
+from math import sqrt
+
 class SudokuPuzzle:
     """
     A class to represent a single sudoku puzzle.
-
     Attributes
     ----------
     board : list[list]
@@ -20,7 +21,7 @@ class SudokuPuzzle:
     invalid_state
         Checks if the state of the puzzle is invalid
     """
-    def __init__(self,board):
+    def __init__(self, board, csp=False):
         """
         Example:
         For the below puzzle
@@ -28,7 +29,6 @@ class SudokuPuzzle:
         |3|2| |1|
         | | |2|4|
         | | |1| |
-
         self.board = [["1","","",""],["3","2","","1"],["","","2","4"],["","","1",""]]
         self.variables = [1,2,3,4]
         """
@@ -38,17 +38,16 @@ class SudokuPuzzle:
         for i in range(self.size):
             self.symbols.append(str(i+1))
         self.symbols.sort()
-        self.cols = "1"
-        self.rows = "A"
-        self.unitlist = ""
-        self.init_csp_values()
-
-        self.squares = self.cross(self.rows, self.cols)
-        self.domain = self.getDict(self.board)
-        self.values = self.getDict(self.board)
-
-        self.units = dict((s, [u for u in self.unitlist if s in u]) for s in self.squares)
-        self.constraints = {(variable, i) for variable in self.squares for peer in self.units[variable] for i in peer if i != variable}
+        if csp:
+           self.cols = "1"
+           self.rows = "A"
+           self.unitlist = ""
+           self.init_csp_values()
+           self.squares = self.cross(self.rows, self.cols)
+           self.domain = self.getDict(self.board)
+           self.values = self.getDict(self.board)
+           self.units = dict((s, [u for u in self.unitlist if s in u]) for s in self.squares)
+           self.constraints = {(variable, i) for variable in self.squares for peer in self.units[variable] for i in peer if i != variable}
 
     def init_csp_values(self):
         digit = "1"
@@ -129,7 +128,6 @@ class SudokuPuzzle:
         """
         Check if the current state of the puzzle is invalid.
         No row/column/subgrid should contain a duplicate element.
-
         Returns
         -------
         True : if the state is invalid
@@ -137,6 +135,7 @@ class SudokuPuzzle:
         """
 
         "checking for duplicates in each row"
+
         for row in self.board:
             row_duplicates = any(row.count(element) > 1 for element in row)
             if row_duplicates:
@@ -177,7 +176,6 @@ class SudokuPuzzle:
     def solved(self):
         """
         Checks if the puzzle is solved
-
         Returns
         -------
         True : if solved
@@ -217,6 +215,7 @@ class SudokuPuzzle:
                     print(row[i], "|", end=" ")
                 c+=1
             r+=1
+
 
 
 

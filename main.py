@@ -41,9 +41,8 @@ def solve_size9_file(filename='easy.txt'):
 
 if __name__ == '__main__':
         base = 3
-        #board = board_random(base)
-        board = solve_size9_file()
-
+        board = board_random(base, 56)
+        
         print(board)
         print("\n################## NOW DOING STOCHASTIC ##################\n")
         t = time.time()
@@ -71,7 +70,8 @@ if __name__ == '__main__':
         
 
         print("\n################## NOW DOING AC3 ##################\n")
-        board = solve_size9_file()
+        #board = board_random(base)
+        #board = solve_size9_file()
         t = time.time()
         test_csp = SudokuPuzzle(board, True)
         sudoku = AC3(test_csp, base)
@@ -106,7 +106,9 @@ if __name__ == '__main__':
 
         
         print("\n################## NOW DOING BACKTRACK ##################\n")
-        board = solve_size9_file()
+        #board = board_random(base)
+        #board = solve_size9_file()
+        print(board)
         t = time.time() 
         test_bt = SudokuPuzzle(board, True)
         print(test_bt.board)

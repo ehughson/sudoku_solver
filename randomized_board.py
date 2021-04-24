@@ -24,9 +24,10 @@ def board_random( base,empty_frac = 0):
     nums = shuffle(range(1, base*base+1))
     board = [[ str(nums[pattern(base,side, r, c )]) for c in colum] for r in rows1]
     if empty_frac != 0:
-        empties = (side*side) * empty_frac
+        empties = empty_frac
     else:
-        empties = (side*side) * 3//6
+        empties = (side*side) * 4//7
+    print(empties)
     for p in sample(range(side*side), empties):
             board[p//side][p%side] = ''
 

@@ -9,19 +9,16 @@ class HillClimbing:
     """
     A class to represent a Sudoku solver using HillClimbing Algorithm using Random Restart
     Reference : https://www.cs.rochester.edu/u/brown/242/assts/termprojs/Sudoku09.pdf
-
     About the algorithm
     Let the start state be defined as the initially puzzle with all of the empty spaces filled in such that each
     row contains the numbers one to n^2. Using this as a start state, the successor function can be
     defined as swapping any two non fixed values in the same row.  The heuristic can simply be the sum
     of the number of conflicts that appear within each column and each box.  Since each row has exactly
     the numbers one to n^2 there are no conflicts within the rows.
-
     The general hill climbing algorithm described above is incomplete.  This is because it can
     get stuck in a local minimum.   One simple way to fix this is to randomly restart the algorithm
     whenever it goes a while without improving the heuristic value.  This is known as random restart
     hill climbing.
-
     Attributes
     ----------
     puzzle : object of the SudokuPuzzle class
@@ -45,6 +42,7 @@ class HillClimbing:
 
         sys.setrecursionlimit(3000)
         self.initial_state = puzzle
+        # print("initial state", self.initial_state.board)
         self.current_state = copy.deepcopy(self.initial_state)
         self.non_fixed_values = list()
         emp_list = []
@@ -60,12 +58,14 @@ class HillClimbing:
         """creates the start state by filling each row of the puzzle with values 1 to n"""
         row_num = 0
         start_state = copy.deepcopy(self.initial_state)
+        # print("start_state",start_state.board)
         for row in start_state.board:
             row_symbol_set = set(row)
             avail_symbol_set = self.symbol_set.difference(row_symbol_set)
             sel_row = []
             col = 0
             for i in row:
+                # print("i",i)
                 if i == "":
                     choice_list = list(avail_symbol_set)
                     filled = random.choices(choice_list)
@@ -76,6 +76,7 @@ class HillClimbing:
             self.non_fixed_values[row_num] = sel_row
             start_state.board[row_num] = row
             row_num += 1
+        # print("self.non_fixed_values",self.non_fixed_values)
         for i in range(len(self.non_fixed_values)):
             row = self.non_fixed_values[i]
             if len(row) > 1:
@@ -96,6 +97,7 @@ class HillClimbing:
         if state.size == 1:
             sel_row = 0
         else:
+           # print("self.choices", self.choices)
            rand_num = random.randint(0, len(self.choices)-1)
            sel_row = self.choices[rand_num]
         row = self.non_fixed_values[sel_row]
@@ -180,7 +182,7 @@ class HillClimbing:
         #print('Heuristic of NEXT state = ', self.heuristic_function(next_state))
         #print("******************************************************************")
 
-        next_state.print_sudoku()
+        # next_state.print_sudoku()
         if self.heuristic_function(next_state) == 0:
             #print('Solved ! : Heuristics has reached 0')
             return next_state
@@ -216,4 +218,9 @@ class HillClimbing:
         #print('Total number of iterations = ', i)
         return None
 
-
+    def solve(self):
+        final = self.solver()
+        if final !=None:
+            if final.solved():
+                return True
+        return False
