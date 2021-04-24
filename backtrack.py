@@ -8,18 +8,19 @@ from SudokuPuzzle import SudokuPuzzle
 
 class backtrack():
         def __init__(self, puzzle, base):
-                self.grid = puzzle
+                self.grid =( [list( map(int,i) ) for i in puzzle] )
                 self.box_size = base
 
         def foundSolution(self, i, j):
 
-                for x in range(i,9):
-                        for y in range(j,9):
-                                if self.grid[x][y] == 0:
+                for x in range(i,len(self.grid)):
+                        for y in range(j,len(self.grid)):
+                                if (self.grid[x][y] == 0) or (self.grid[x][y] > len(self.grid)):
+                                        #print(self.grid[x][y])
                                         return x,y
-                for x in range(0,9):
-                        for y in range(0,9):
-                                if self.grid[x][y] == 0:
+                for x in range(0,len(self.grid)):
+                        for y in range(0, len(self.grid)):
+                                if (self.grid[x][y] == 0)or (self.grid[x][y] > len(self.grid)):
                                         return x,y
                 return None, None
 

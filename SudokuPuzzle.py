@@ -1,9 +1,10 @@
 from math import sqrt
 
+from math import sqrt
+
 class SudokuPuzzle:
     """
     A class to represent a single sudoku puzzle.
-
     Attributes
     ----------
     board : list[list]
@@ -28,7 +29,6 @@ class SudokuPuzzle:
         |3|2| |1|
         | | |2|4|
         | | |1| |
-
         self.board = [["1","","",""],["3","2","","1"],["","","2","4"],["","","1",""]]
         self.variables = [1,2,3,4]
         """
@@ -128,7 +128,6 @@ class SudokuPuzzle:
         """
         Check if the current state of the puzzle is invalid.
         No row/column/subgrid should contain a duplicate element.
-
         Returns
         -------
         True : if the state is invalid
@@ -177,7 +176,6 @@ class SudokuPuzzle:
     def solved(self):
         """
         Checks if the puzzle is solved
-
         Returns
         -------
         True : if solved
@@ -217,6 +215,7 @@ class SudokuPuzzle:
                     print(row[i], "|", end=" ")
                 c+=1
             r+=1
+
 
 
 

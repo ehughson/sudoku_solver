@@ -3,20 +3,23 @@ from random import sample
 from math import sqrt
 from time import time
 from SudokuPuzzle import SudokuPuzzle
-
 import queue
+from backtrack import backtrack
 
 #constraint propogation with AC3
 
 class AC3():
     """
     A class to represent a Sudoku solver using Constraint Satisfaction Problem
-    Reference : <TO BE ADDED>
+    Reference : https://sandipanweb.wordpress.com/2017/03/17/solving-sudoku-as-a-constraint-satisfaction-problem-using-constraint-propagation-with-arc-consistency-checking-and-then-backtracking-with-minimum-remaning-value-heuristic-and-forward-checking/
+    https://medium.com/my-udacity-ai-nanodegree-notes/solving-sudoku-think-constraint-satisfaction-problem-75763f0742c9
+    https://medium.com/swlh/how-to-solve-constraint-satisfaction-problems-csps-with-ac-3-algorithm-in-python-f7a9be538cfe
     About the algorithm
     <TO BE ADDED>
     Attributes
     ----------
     csp : object of the SudokuPuzzle class
+    base: size of sudoku = n x n, where n is base
     Methods
     -------
     AC3_solve
@@ -27,17 +30,21 @@ class AC3():
         calculates the heuristic of the current state
     """
 
-    def __init__(self, csp:SudokuPuzzle):
+    def __init__(self, csp, base):
         """
         input is the Sudoku puzzle
         """
         self.grid = csp
+        #print(self.grid.board)
+        self.base = base
 
     def AC3_solve(self):
         """
         Solver for AC3 CSP
         """
+        
         q = queue.Queue()
+        #print("the size of the constraints are:", len(self.grid.constraints))
         for arc in self.grid.constraints:  # add all the arcs to a queue
             q.put(arc)
         while not q.empty():
@@ -46,33 +53,18 @@ class AC3():
             for p in values:
                 if not self.isconsistent(p, x, y):
                     self.grid.values[x] = "".join(c for c in self.grid.values[x] if c not in set(p))
+                    #print(self.grid.values[x])
                     if len(self.grid.values[x]) == 0:
                         return False
                     for k in (self.grid.units[x]):
                         for v in k:
                             if v != x:
-                                q.put(
-                                    (v, x))  # if the x domain has changed add all arcs of the form (k, x) to the queue
+                                q.put((v, x))  # if the x domain has changed add all arcs of the form (k, x) to the queue
 
-        sudoku_grid = []
-        r = 0
-        for key in self.grid.values:
-            if r == 0:
-                interarray = []
-            r = r + 1
-            #if len(self.grid.values[key]) > 1:
-                #print("WE HAVE AN ERROR -- VALUE CONTAINS MORE THAN ONE VALUE")
-                #exit(-1)
-            interarray.append(str(self.grid.values[key]))
-            if r == self.grid.size:
-                r = 0
-                sudoku_grid.append(interarray)
-        print("sudoku_grid",sudoku_grid)
-        solution = SudokuPuzzle(sudoku_grid)
-        if solution.solved():
-            return True
-        else:
-            return False
+        #print(len(self.grid.board))
+        return True
+       
+          
 
     def isconsistent(self, x, Xi, Xj):
         """
@@ -83,21 +75,5 @@ class AC3():
                 if Xj in peer and y != x:
                     return True
         return False
-
-
-
-
-# board = [
-#          ["","","","2","6","","7","","1"],
-#          ["6","8","","","7","","","9",""],
-#          ["1","9","","","","4","5","",""],
-#          ["8","2","","1","","","","4",""],
-#          ["","","4","6","","2","9","",""],
-#          ["","5","","","","3","","2","8"],
-#          ["","","9","3","","","","7","4"],
-#          ["","4","","","5","","","3","6"],
-#          ["7","","3","","1","8","","",""],
-#         ]
-
-
+    
 

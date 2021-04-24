@@ -93,3 +93,4 @@ class SudokuSolver:
 
 solver = SudokuSolver()
 solver.solve_size9_file("easy.txt")
+
