@@ -74,7 +74,7 @@ def solve_for_board(board):
     else:
         print("Failed   ",end='')
     print(str(time_taken))
-    stoch_time += int(time_taken)
+    stoch_time += float(time_taken)
     # puzzle.print_sudoku()
 
     print("HillClimbing     ", end='')
@@ -90,7 +90,7 @@ def solve_for_board(board):
     else:
         print("Failed   ", end='')
     print(str(time_taken))
-    hill_time += int(time_taken)
+    hill_time += float(time_taken)
     #puzzle.print_sudoku(result)
 
 
@@ -119,14 +119,14 @@ def solve_for_board(board):
         print("AC3 + Backtrack  ",end='')
         print("Solved   ",end='')
         print(str(time_taken2))
-        ac3_time += int(time_taken2)
+        ac3_time += float(time_taken2)
 
     else:
         ac3_cnt += 1
         print("AC3              ",end='')
         print("Solved   ",end='')
         print(str(time_taken))
-        ac3_time += int(time_taken)
+        ac3_time += float(time_taken)
 
 
     t = time.time()
@@ -136,7 +136,7 @@ def solve_for_board(board):
     print("Backtrack        ",end='')
     print("Solved   ",end='')
     print(str(time_taken))
-    back_time += int(time_taken)
+    back_time += float(time_taken)
 
 def solved_stat(total):
     print("***************************************")
