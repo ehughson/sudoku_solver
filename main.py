@@ -45,7 +45,6 @@ if __name__ == '__main__':
         board = solve_size9_file()
 
         print(board)
-
         print("\n################## NOW DOING STOCHASTIC ##################\n")
         t = time.time()
         puzzle = SudokuPuzzle(board)
@@ -54,9 +53,10 @@ if __name__ == '__main__':
         result = stochastic_solver.solver()
 
         print("the time it took to complete Stochastic:", str(time.time() - t))
-        puzzle.print_sudoku(result)
+        puzzle.print_sudoku()
         
         print("\n################## NOW DOING HILLCLIMBING ##################\n")
+        board = solve_size9_file()
         t = time.time()
 
         print(board)
@@ -64,16 +64,18 @@ if __name__ == '__main__':
         hillclimb_solver = HillClimbing(puzzle, 50)
         start = time.process_time()
         result = hillclimb_solver.solve()
+        print(result)
 
         print("the time it took to complete HillClimbing:", str(time.time() - t))
         puzzle.print_sudoku(result)
-
+        
 
         print("\n################## NOW DOING AC3 ##################\n")
+        board = solve_size9_file()
         t = time.time()
         test_csp = SudokuPuzzle(board, True)
         sudoku = AC3(test_csp, base)
-        sudoku.AC3_solve()
+        result = sudoku.AC3_solve()
         time_taken = time.time()-t
         
         flag = False
@@ -104,8 +106,9 @@ if __name__ == '__main__':
 
         
         print("\n################## NOW DOING BACKTRACK ##################\n")
+        board = solve_size9_file()
         t = time.time() 
-        test_bt = SudokuPuzzle(board)
+        test_bt = SudokuPuzzle(board, True)
         print(test_bt.board)
         back_track = backtrack(test_bt.board, base)
         backtrack_output = back_track.solveSudoku()
