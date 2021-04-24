@@ -24,11 +24,11 @@ def create_boards(filename, outfile):
                     j += 1
             board.append(row)
         if i == 9:
-            nf.write(str(board))
+            nf.writelines(str(board))
             nf.write("\n")
         i += 1
     nf.close()
 
 
-create_boards('easy.txt', 'easy_sudoku.txt')
-create_boards('hard.txt', 'hard_sudoku.txt')
+create_boards('easy.txt', 'easy_sudoku.py')
+create_boards('hard.txt', 'hard_sudoku.py')

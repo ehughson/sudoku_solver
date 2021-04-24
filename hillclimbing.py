@@ -45,6 +45,7 @@ class HillClimbing:
 
         sys.setrecursionlimit(3000)
         self.initial_state = puzzle
+        # print("initial state", self.initial_state.board)
         self.current_state = copy.deepcopy(self.initial_state)
         self.non_fixed_values = list()
         emp_list = []
@@ -60,12 +61,14 @@ class HillClimbing:
         """creates the start state by filling each row of the puzzle with values 1 to n"""
         row_num = 0
         start_state = copy.deepcopy(self.initial_state)
+        # print("start_state",start_state.board)
         for row in start_state.board:
             row_symbol_set = set(row)
             avail_symbol_set = self.symbol_set.difference(row_symbol_set)
             sel_row = []
             col = 0
             for i in row:
+                # print("i",i)
                 if i == "":
                     choice_list = list(avail_symbol_set)
                     filled = random.choices(choice_list)
@@ -76,6 +79,7 @@ class HillClimbing:
             self.non_fixed_values[row_num] = sel_row
             start_state.board[row_num] = row
             row_num += 1
+        # print("self.non_fixed_values",self.non_fixed_values)
         for i in range(len(self.non_fixed_values)):
             row = self.non_fixed_values[i]
             if len(row) > 1:
@@ -96,6 +100,7 @@ class HillClimbing:
         if state.size == 1:
             sel_row = 0
         else:
+           # print("self.choices", self.choices)
            rand_num = random.randint(0, len(self.choices)-1)
            sel_row = self.choices[rand_num]
         row = self.non_fixed_values[sel_row]
@@ -180,7 +185,7 @@ class HillClimbing:
         #print('Heuristic of NEXT state = ', self.heuristic_function(next_state))
         #print("******************************************************************")
 
-        next_state.print_sudoku()
+        # next_state.print_sudoku()
         if self.heuristic_function(next_state) == 0:
             #print('Solved ! : Heuristics has reached 0')
             return next_state
@@ -215,5 +220,17 @@ class HillClimbing:
                 self.create_start_state()
         #print('Total number of iterations = ', i)
         return None
+
+    def solve(self):
+        final = self.solver()
+        if final !=None:
+            if final.solved():
+                return True
+        return False
+
+
+
+
+
 
 

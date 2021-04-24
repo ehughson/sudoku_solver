@@ -2,7 +2,8 @@ import numpy as np
 from random import sample
 from math import sqrt
 from time import time
-#from SudokuPuzzle import SudokuPuzzle
+from SudokuPuzzle import SudokuPuzzle
+
 import queue
 
 #constraint propogation with AC3
@@ -26,7 +27,7 @@ class AC3():
         calculates the heuristic of the current state
     """
 
-    def __init__(self, csp):
+    def __init__(self, csp:SudokuPuzzle):
         """
         input is the Sudoku puzzle
         """
@@ -62,11 +63,16 @@ class AC3():
             #if len(self.grid.values[key]) > 1:
                 #print("WE HAVE AN ERROR -- VALUE CONTAINS MORE THAN ONE VALUE")
                 #exit(-1)
-            interarray.append(self.grid.values[key])
+            interarray.append(str(self.grid.values[key]))
             if r == self.grid.size:
                 r = 0
                 sudoku_grid.append(interarray)
-        return sudoku_grid
+        print("sudoku_grid",sudoku_grid)
+        solution = SudokuPuzzle(sudoku_grid)
+        if solution.solved():
+            return True
+        else:
+            return False
 
     def isconsistent(self, x, Xi, Xj):
         """
@@ -77,5 +83,21 @@ class AC3():
                 if Xj in peer and y != x:
                     return True
         return False
-    
+
+
+
+
+# board = [
+#          ["","","","2","6","","7","","1"],
+#          ["6","8","","","7","","","9",""],
+#          ["1","9","","","","4","5","",""],
+#          ["8","2","","1","","","","4",""],
+#          ["","","4","6","","2","9","",""],
+#          ["","5","","","","3","","2","8"],
+#          ["","","9","3","","","","7","4"],
+#          ["","4","","","5","","","3","6"],
+#          ["7","","3","","1","8","","",""],
+#         ]
+
+
 
