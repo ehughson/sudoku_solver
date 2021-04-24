@@ -7,7 +7,7 @@ class SudokuPuzzle:
     Attributes
     ----------
     board : list[list]
-        contains the sudoku puzzle as a list of rows
+        contains the sudoku puzzle as a list of rows of characters. Blank is represented as ""
     size  : int
         size of the puzzle.(for n*n puzzle, size = n)
     symbols : list[int]
