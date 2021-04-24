@@ -170,7 +170,7 @@ if __name__ == '__main__':
             board = board_random(base, 46)
             solve_for_board(board)
             print("---------------------------------------------")
-        solved_stat()
+        solved_stat(5)
         reset_counts()
 
         print("Random Puzzles with 27 empty cells")
@@ -179,7 +179,7 @@ if __name__ == '__main__':
             board = board_random(base, 27)
             solve_for_board(board)
             print("---------------------------------------------")
-        solved_stat()
+        solved_stat(5)
         reset_counts()
 
         print("Easy puzzles")
