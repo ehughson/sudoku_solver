@@ -1,5 +1,24 @@
 # sudoku_solver
 Code for CMPT827 project that will use various path finding algorithms /search algorithms to solve the puzzle
 
+Four puzzles were implemented:
+- AC-3
+- Backtracking
+- Stochastic
+- Hill-climbing
 
-Link to project proposal: https://docs.google.com/document/d/1k9sy9mBKZ5AMrXdHuRy_C8dM4TMWu8-RnvOO9U123XE/edit?ts=60369a59
+To run the algorithms through 4 various test cases run 'python3 main.py'
+
+Dependencies:
+- NumPy
+- Random 
+- Math 
+- Time
+- queue
+- sys
+
+
+
+
+
+
