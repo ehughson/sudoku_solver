@@ -9,9 +9,11 @@ from SudokuPuzzle import SudokuPuzzle
 #https://afteracademy.com/blog/sudoku-solver
 
 class backtrack():
+
         def __init__(self, puzzle, base):
                 self.puzzle =( [list( map(int,i) ) for i in puzzle] )
                 self.box_size = base
+                self.curr_time = time.time()
 
         def foundSolution(self, i, j):
 
@@ -53,7 +55,9 @@ class backtrack():
                 return
 
 
-        def solveBacktrack(self, i=0, j=0):
+        def solveBacktrack(self,start_time, i=0, j=0, ):
+                if int(time.time() - start_time) > 4:
+                        return False
                 i, j = self.foundSolution(i, j) #find next cell that is worth completing
                 if i == None or j == None:
                         return True #puzzle is solved
@@ -62,8 +66,7 @@ class backtrack():
                         if self.isSafe(i,j,val):
                                 self.applyValue(i, j, val)
                                 #print(grid)
-                                if self.solveBacktrack(i, j):
-                                        return self.puzzle
+                                self.solveBacktrack(i, j, start_time)
                                 self.removeValue(i, j)
                                 #print(i+1)
                 return False
