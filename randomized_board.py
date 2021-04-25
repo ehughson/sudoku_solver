@@ -16,11 +16,11 @@ def main():
 
 def board_random( base,empty_frac = 0):
     side = base * base
-    rBase = range(base)
-    rows1 = [g*base + r for g in shuffle(rBase) for r in shuffle(rBase)]
-    colum = [g*base +c for g in shuffle(rBase) for c in shuffle(rBase)]
-    nums = shuffle(range(1, base*base+1))
-    board = [[ str(nums[pattern(base,side, r, c )]) for c in colum] for r in rows1]
+    Base = range(base)
+    row = [i*base + r for i in shuffle(Base) for r in shuffle(Base)]
+    col= [i*base + c for i in shuffle(Base) for c in shuffle(Base)]
+    nums = shuffle(range(1, side+1))
+    board = [[ str(nums[pattern(base,side, r, c )]) for c in col] for r in row]
     if empty_frac != 0:
         empties = empty_frac
     else:

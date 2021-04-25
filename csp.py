@@ -24,10 +24,8 @@ class AC3():
     -------
     AC3_solve
         solver for the sudoku
-    successor_function
-        generates the successor of the current state
-    heuristic function
-        calculates the heuristic of the current state
+    checkConsistency
+        check for an inconsistencies in the puzzle
     """
 
     def __init__(self, csp, base):

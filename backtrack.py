@@ -9,7 +9,24 @@ from SudokuPuzzle import SudokuPuzzle
 #https://afteracademy.com/blog/sudoku-solver
 
 class backtrack():
-
+        """     
+        A class to represent a Sudoku solver using backtracking
+        #reference: https://www.geeksforgeeks.org/backtracking-introduction/
+        #https://www.geeksforgeeks.org/sudoku-backtracking-7/
+        #https://afteracademy.com/blog/sudoku-solver
+        Attributes
+        ----------
+        puzzle : object of the SudokuPuzzle class
+        base: size of sudoku = n x n, where n is base
+        Methods
+        -------
+        foundSolution
+                finds an empty cell
+        isSafe
+                checks to see if it doesnt conflict with other squares
+        solveBacktrack
+                solves the sudoku puzzle
+        """
         def __init__(self, puzzle, base):
                 self.puzzle =( [list( map(int,i) ) for i in puzzle] )
                 self.box_size = base
@@ -21,6 +38,7 @@ class backtrack():
                                 if (self.puzzle[x][y] == 0) or (self.puzzle[x][y] > len(self.puzzle)):
                                         #print(self.grid[x][y])
                                         return x,y
+
                 for x in range(len(self.puzzle)):
                         for y in range(len(self.puzzle)):
                                 if (self.puzzle[x][y] == 0)or (self.puzzle[x][y] > len(self.puzzle)):
@@ -54,7 +72,7 @@ class backtrack():
                 return
 
 
-        def solveBacktrack(self, i=0, j=0 ):
+        def solveBacktrack(self, i, j):
                 i, j = self.foundSolution(i, j) #find next cell that is worth completing
                 if i == None or j == None:
                         return True #puzzle is solved
