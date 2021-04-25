@@ -13,7 +13,6 @@ class backtrack():
         def __init__(self, puzzle, base):
                 self.puzzle =( [list( map(int,i) ) for i in puzzle] )
                 self.box_size = base
-                self.curr_time = time.time()
 
         def foundSolution(self, i, j):
 
