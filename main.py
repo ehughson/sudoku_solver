@@ -111,13 +111,16 @@ def solve_for_board(board):
     if flag == True:
         new_board = np.array(new_grid).reshape(len(test_csp.board), len(test_csp.board))
         # new_board_s = SudokuPuzzle(new_board)
-        t = time.time()
         back_track_brd = backtrack(new_board, base)
-        back_track_brd_out = back_track_brd.solveBacktrack(0, 0)
+        t = time.time()
+        back_track_brd_out = back_track_brd.solveBacktrack(t,0, 0)
         time_taken2 = time.time() - t
 
         print("AC3 + Backtrack  ",end='')
-        print("Solved   ",end='')
+        if back_track_brd_out == True:
+           print("Solved   ",end='')
+        else:
+            print("Failed   ", end='')
         print(str(time_taken2))
         ac3_time += float(time_taken2)
 
@@ -135,6 +138,10 @@ def solve_for_board(board):
     back_track_brd_out = back_track.solveBacktrack(0, 0)
     time_taken = time.time() - t
     print("Backtrack        ",end='')
+    if back_track_brd_out == True:
+        print("Solved   ", end='')
+    else:
+        print("Failed   ", end='')
     print("Solved   ",end='')
     print(str(time_taken))
     back_time += float(time_taken)
