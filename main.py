@@ -190,11 +190,6 @@ if __name__ == '__main__':
         solved_stat(50)
         reset_counts()
 
-        print("Hard puzzles")
-        solve_size9_file('hard.txt')
-        solved_stat(95)
-        reset_counts()
-
         print("End")
 
         
