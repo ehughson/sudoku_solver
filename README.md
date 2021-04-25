@@ -9,6 +9,10 @@ Four puzzles were implemented:
 
 To run the algorithms through 4 various test cases run 'python3 main.py'
 
+Important files:
+- randomized_board.py creates a random sudoku board with a empty cell parameter that tells how many empty cells should be present in a given puzzle. 
+- SudokuPuzzle.py creates the puzzle class instance and stores all useful information inorder to code all the different algorithms. 
+
 Dependencies:
 - NumPy
 - Random 
