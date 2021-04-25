@@ -113,7 +113,7 @@ def solve_for_board(board):
         # new_board_s = SudokuPuzzle(new_board)
         t = time.time()
         back_track_brd = backtrack(new_board, base)
-        back_track_brd_out = back_track_brd.solveSudoku()
+        back_track_brd_out = back_track_brd.solveBacktrack(0, 0)
         time_taken2 = time.time() - t
 
         print("AC3 + Backtrack  ",end='')
@@ -132,6 +132,7 @@ def solve_for_board(board):
     t = time.time()
     test_bt = SudokuPuzzle(board, True)
     back_track = backtrack(test_bt.board, base)
+    back_track_brd_out = back_track.solveBacktrack(0, 0)
     time_taken = time.time() - t
     print("Backtrack        ",end='')
     print("Solved   ",end='')

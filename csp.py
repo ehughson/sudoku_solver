@@ -42,7 +42,6 @@ class AC3():
         """
         Solver for AC3 CSP
         """
-        
         q = queue.Queue()
         #print("the size of the constraints are:", len(self.grid.constraints))
         for arc in self.grid.constraints:  # add all the arcs to a queue
@@ -51,7 +50,7 @@ class AC3():
             (x, y) = q.get()  # get the first arc (x,y) off the queue
             values = set(self.grid.values[x])
             for p in values:
-                if not self.isconsistent(p, x, y):
+                if not self.checkConsistency(p, x, y):
                     self.grid.values[x] = "".join(c for c in self.grid.values[x] if c not in set(p))
                     #print(self.grid.values[x])
                     if len(self.grid.values[x]) == 0:
@@ -66,13 +65,13 @@ class AC3():
        
           
 
-    def isconsistent(self, x, Xi, Xj):
+    def checkConsistency(self, p, i, j):
         """
         Check inconsistency
         """
-        for y in self.grid.values[Xj]:
-            for peer in self.grid.units[Xi]:
-                if Xj in peer and y != x:
+        for val in self.grid.values[j]:
+            for peer in self.grid.units[i]:
+                if j in peer and val != p:
                     return True
         return False
     
