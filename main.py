@@ -118,7 +118,7 @@ def solve_for_board(board):
 
         print("AC3 + Backtrack  ",end='')
         if back_track_brd_out == True:
-           print("Solved   ",end='')
+            print("Solved   ",end='')
         else:
             print("Failed   ", end='')
         print(str(time_taken2))
@@ -142,7 +142,6 @@ def solve_for_board(board):
         print("Solved   ", end='')
     else:
         print("Failed   ", end='')
-    print("Solved   ",end='')
     print(str(time_taken))
     back_time += float(time_taken)
 

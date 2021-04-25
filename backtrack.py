@@ -1,7 +1,7 @@
 import numpy as np 
 from random import sample
 from math import sqrt
-from time import time
+import time
 from SudokuPuzzle import SudokuPuzzle
 
 #reference: https://www.geeksforgeeks.org/backtracking-introduction/
@@ -55,7 +55,7 @@ class backtrack():
 
 
         def solveBacktrack(self,start_time, i=0, j=0, ):
-                if int(time.time() - start_time) > 4:
+                if int(time.time() - start_time) > 5:
                         return False
                 i, j = self.foundSolution(i, j) #find next cell that is worth completing
                 if i == None or j == None:
