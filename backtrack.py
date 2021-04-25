@@ -54,9 +54,7 @@ class backtrack():
                 return
 
 
-        def solveBacktrack(self,start_time, i=0, j=0, ):
-                if int(time.time() - start_time) > 5:
-                        return False
+        def solveBacktrack(self, i=0, j=0 ):
                 i, j = self.foundSolution(i, j) #find next cell that is worth completing
                 if i == None or j == None:
                         return True #puzzle is solved
@@ -65,7 +63,7 @@ class backtrack():
                         if self.isSafe(i,j,val):
                                 self.applyValue(i, j, val)
                                 #print(grid)
-                                self.solveBacktrack(i, j, start_time)
+                                self.solveBacktrack(i, j)
                                 self.removeValue(i, j)
                                 #print(i+1)
                 return False
